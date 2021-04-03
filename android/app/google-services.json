@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "282599680291",
+    "project_id": "note-app-214fa",
+    "storage_bucket": "note-app-214fa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:282599680291:android:6fae139c517f9dbd25c496",
+        "android_client_info": {
+          "package_name": "com.mssng.quotenote"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "282599680291-i2qsfn5uibmmr9efdm2h6avg1pq85k3o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCSO8suHenL6L6XDj3FBRK7u0IdI9kMIpo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "282599680291-i2qsfn5uibmmr9efdm2h6avg1pq85k3o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
+import 'package:firebase_performance/firebase_performance.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
-void main() => runApp(MyApp());
+FirebaseAnalytics analytics;
+
+void main() {
+
+  _perfTrace() async {
+    Trace trace = FirebasePerformance.instance.newTrace('cool_trace');
+    trace.start();
+    await Future.delayed(Duration(seconds: 5));
+    trace.stop();
+  }
+
+  //Crashlytics.instance.enableInDevMode = true; // turn this off after seeing reports in in the console. 
+  //FlutterError.onError = Crashlytics.instance.recordFlutterError;
+
+  analytics = FirebaseAnalytics();
+  runApp(MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
