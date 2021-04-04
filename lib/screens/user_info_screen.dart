@@ -1,9 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/app_bar_title.dart';
+import 'package:notes_app/widgets/card.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})
@@ -46,14 +48,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     super.initState();
   }
 
+  List<String> teachers = ["Mr Grabski", "Mr Pegg", "Miss Collins"];
+  int _index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.white,
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: CustomColors.white,
-        title: AppBarTitle(photoUrl: _user.photoURL!, name: _user.displayName!),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(70.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            AppBar(
+              elevation: 0,
+              backgroundColor: CustomColors.white,
+              title: AppBarTitle(
+                  photoUrl: _user.photoURL!, name: _user.displayName!),
+            ),
+          ],
+        ),
       ),
       body: SafeArea(
         child: Padding(
@@ -63,10 +76,25 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
             bottom: 20.0,
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Row(),
-              SizedBox(height: 8.0),
+              SizedBox(
+          height: 316, // card height
+          child: PageView.builder(
+            itemCount: 10,
+            clipBehavior: Clip.none,
+            controller: PageController(viewportFraction: (292/MediaQuery.of(context).size.width)),
+            onPageChanged: (int index) => setState(() => _index = index),
+            itemBuilder: (_, i) {
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: NeumorphicCard(groupName: 'Maths', color: CustomColors.primary, onPressed: () => {}, groupType: 'Class', adminNames: teachers),
+              );
+            },
+          ),
+        ),
+              //NeumorphicCard(groupName: 'Maths', color: CustomColors.primary, onPressed: () => {}, groupType: 'Class', adminNames: teachers)
+              /* SizedBox(height: 8.0),
               Text(
                 _user.displayName!,
                 style: TextStyle(
@@ -90,11 +118,12 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                     color: CustomColors.lightGrey.withOpacity(0.8),
                     fontSize: 14,
                     letterSpacing: 0.2),
-              ),
-              SizedBox(height: 16.0),
+              ), */
+              //SizedBox(height: 16.0),
               _isSigningOut
                   ? CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      valueColor:
+                          AlwaysStoppedAnimation<Color>(CustomColors.primary),
                     )
                   : ElevatedButton(
                       style: ButtonStyle(

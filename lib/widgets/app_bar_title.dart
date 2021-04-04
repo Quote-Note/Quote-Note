@@ -11,13 +11,11 @@ class AppBarTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SizedBox(width: 8),
         Neumorphic(
           style: NeumorphicStyle(
-            depth: 3,
+            depth: -1,
             intensity: 1,
             boxShape: NeumorphicBoxShape.circle(),
           ),
@@ -27,9 +25,47 @@ class AppBarTitle extends StatelessWidget {
               color: CustomColors.lightShadow.withOpacity(0.3),
               child: Image.network(
                 photoUrl,
-                scale: 2.5,
-                fit: BoxFit.fitWidth,
+                scale: 2,
+                fit: BoxFit.fitHeight,
               ),
+            ),
+          ),
+        ),
+        Text(
+          name,
+          style: TextStyle(
+            color: CustomColors.darkGrey,
+          )
+        ),
+        NeumorphicButton(
+          //TODO
+          onPressed: () => {},
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: ClipOval(
+            child: Material(
+              color: CustomColors.lightShadow.withOpacity(0.3),
+              child: Icon(Icons.star_border_outlined, color: CustomColors.darkGrey),
+            ),
+          ),
+        ),
+        NeumorphicButton(
+          //TODO
+          onPressed: () => {},
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: ClipOval(
+            child: Material(
+              color: CustomColors.lightShadow.withOpacity(0.3),
+              child: Icon(Icons.home, color: CustomColors.primary,),
             ),
           ),
         ),
