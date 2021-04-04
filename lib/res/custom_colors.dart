@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class CustomColors {
-  static final Color firebaseNavy = Color(0xFF2C384A);
-  static final Color firebaseOrange = Color(0xFFF57C00);
-  static final Color firebaseAmber = Color(0xFFFFA000);
-  static final Color firebaseYellow = Color(0xFFFFCA28);
-  static final Color firebaseGrey = Color(0xFFECEFF1);
+  static final Color primary = Color(0xFF4ABCA1);
+  static final Color yellow = Color(0xFFF2C94C);
+  static final Color darkGrey = Color(0xFF456078);
+  static final Color lightGrey = Color(0xFF8C94A0);
+  static final Color white = Color(0xFFF2F3F7);
+  static final Color lightShadow = Color(0xFFFFFFFF);
+  static final Color darkShadow = Color(0xFFBECDE2);
   static final Color googleBackground = Color(0xFF4285F4);
 }

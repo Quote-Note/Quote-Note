@@ -1,30 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:notes_app/res/custom_colors.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class AppBarTitle extends StatelessWidget {
+  final String photoUrl;
+  final String name;
+
+  const AppBarTitle({required this.photoUrl, required this.name});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Image.asset(
-          'assets/firebase_logo.png',
-          height: 20,
-        ),
         SizedBox(width: 8),
-        Text(
-          'FlutterFire',
-          style: TextStyle(
-            color: CustomColors.firebaseYellow,
-            fontSize: 18,
+        Neumorphic(
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
           ),
-        ),
-        Text(
-          ' Authentication',
-          style: TextStyle(
-            color: CustomColors.firebaseOrange,
-            fontSize: 18,
+          padding: const EdgeInsets.all(5),
+          child: ClipOval(
+            child: Material(
+              color: CustomColors.lightShadow.withOpacity(0.3),
+              child: Image.network(
+                photoUrl,
+                scale: 2.5,
+                fit: BoxFit.fitWidth,
+              ),
+            ),
           ),
         ),
       ],
