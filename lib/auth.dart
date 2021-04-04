@@ -7,31 +7,33 @@ class AuthService {
   // Dependencies
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final Firestore _db = Firestore.instance;
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Shared State for Widgets
-  Observable<FirebaseUser> user; // firebase user
+  Observable<User> user; // firebase user
   Observable<Map<String, dynamic>> profile; // custom user data in Firestore
   PublishSubject loading = PublishSubject();
 
   // constructor
-    AuthService() {
-    user = Observable(_auth.onAuthStateChanged);
+  AuthService() {
+    user = Observable(_auth.authStateChanges());
 
-    profile = user.switchMap((FirebaseUser u) {
+    profile = user.switchMap((User u) {
       if (u != null) {
         return _db
             .collection('users')
-            .document(u.uid)
+            .doc(u.uid)
             .snapshots()
-            .map((snap) => snap.data);
+            .map((snap) => snap.data());
       } else {
         return Observable.just({});
       }
     });
   }
 
-    Future<FirebaseUser> googleSignIn() async {
+  Future<User> googleSignIn() async {
+    User user;
+
     // Start
     loading.add(true);
 
@@ -39,9 +41,30 @@ class AuthService {
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
 
     // Step 2
-    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    FirebaseUser user = await _auth.signInWithGoogle(
-        accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
+    if (googleUser != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+          await googleUser.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+            await _auth.signInWithCredential(credential);
+
+        user = userCredential.user;
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        } else if (e.code == 'invalid-credential') {
+          // handle the error here
+        }
+      } catch (e) {
+        // handle the error here
+      }
+    }
 
     // Step 3
     updateUserData(user);
@@ -52,16 +75,16 @@ class AuthService {
     return user;
   }
 
-  void updateUserData(FirebaseUser user) async {
-    DocumentReference ref = _db.collection('users').document(user.uid);
+  void updateUserData(User user) async {
+    DocumentReference ref = _db.collection('users').doc(user.uid);
 
-    return ref.setData({
+    return ref.set({
       'uid': user.uid,
       'email': user.email,
-      'photoURL': user.photoUrl,
+      'photoURL': user.photoURL,
       'displayName': user.displayName,
       'lastSeen': DateTime.now()
-    }, merge: true);
+    }, SetOptions(merge: true));
   }
 
   void signOut() {
@@ -69,4 +92,4 @@ class AuthService {
   }
 }
 
-final AuthService authService = AuthService(); 
+final AuthService authService = AuthService();

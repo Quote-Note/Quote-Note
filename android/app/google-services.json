@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "282599680291-epicrd9m8k2s6cfqurcb0utjai9c2185.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mssng.quotenote",
+            "certificate_hash": "e8938a7910306e8977a6a71c4c296e4732c23213"
+          }
+        },
+        {
           "client_id": "282599680291-i2qsfn5uibmmr9efdm2h6avg1pq85k3o.apps.googleusercontent.com",
           "client_type": 3
         }

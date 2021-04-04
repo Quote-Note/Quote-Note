@@ -1,14 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'auth.dart';
-// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 FirebaseAnalytics analytics;
 
-void main() {
-  //Crashlytics.instance.enableInDevMode = true; // turn this off after seeing reports in in the console.
-  //FlutterError.onError = Crashlytics.instance.recordFlutterError;
-
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   analytics = FirebaseAnalytics();
   runApp(MyApp());
 }
@@ -17,11 +16,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'FlutterBase',
+        title: 'QuoteNote',
         home: Scaffold(
             appBar: AppBar(
-              title: Text('Flutterbase'),
-              backgroundColor: Colors.amber,
+              title: Text('QuoteNote'),
+              backgroundColor: Colors.teal,
             ),
             body: Center(
               child: Column(
