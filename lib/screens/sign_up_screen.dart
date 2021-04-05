@@ -78,7 +78,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           NeumorphicTextField(
                             labelText: 'Email',
-                            icon: Icon(Icons.person_outline_rounded),
+                            icon: Icon(Icons.email),
                             controller: _emailController,
                           ),
                           SizedBox(height: 10),

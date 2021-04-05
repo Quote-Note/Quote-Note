@@ -75,7 +75,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
           elevation: 0,
           backgroundColor: CustomColors.white,
           title: AppBarTitle(
-              photoUrl: _user.photoURL, name: _user.displayName, email: _user.email!,),
+              user: _user,),
         ),
       ),
       body: SafeArea(

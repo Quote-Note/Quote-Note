@@ -4,19 +4,20 @@ import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/screens/profile_screen.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
+import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 
-class AppBarTitle extends StatefulWidget {
+class AppBarProfile extends StatefulWidget {
   final User? user;
 
-  const AppBarTitle(
+  const AppBarProfile(
       {required this.user});
 
   @override
-  _AppBarTitleState createState() => _AppBarTitleState();
+  _AppBarProfileState createState() => _AppBarProfileState();
 }
 
-class _AppBarTitleState extends State<AppBarTitle> {
+class _AppBarProfileState extends State<AppBarProfile> {
   bool isAdmin = false;
 
   Route _routeTo(Widget location) {
@@ -69,9 +70,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-                (widget.user!.displayName != null
-                  ? widget.user!.displayName
-                  : widget.user!.email.toString().substring(0, widget.user!.email.toString().indexOf('@')))!,
+                "Profile",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: CustomColors.darkGrey,
@@ -80,43 +79,8 @@ class _AppBarTitleState extends State<AppBarTitle> {
         ),
         SizedBox(width: 10,),
         NeumorphicButton(
-          onPressed: toggleAdmin,
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: isAdmin
-                ? Icon(Icons.star, color: CustomColors.yellow)
-                : Icon(Icons.star_border_outlined,
-                    color: CustomColors.darkGrey),
-          ),
-        ),
-        SizedBox(width: 10,),
-        NeumorphicButton(
-          onPressed: () => {Navigator.of(context).pushReplacement(_routeTo(ProfileScreen(user: widget.user!)))},
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: Icon(
-              Icons.edit,
-              color: CustomColors.darkGrey,
-            ),
-          ),
-        ),
-        SizedBox(width: 10,),
-        NeumorphicButton(
           onPressed: () async {
-            setState(() {});
-            await Authentication.signOut(context: context);
-            setState(() {});
-            Navigator.of(context).pushReplacement(_routeTo(SignInScreen()));
+            Navigator.of(context).pushReplacement(_routeTo(UserInfoScreen(user: widget.user!)));
           },
           style: NeumorphicStyle(
             depth: 3,
@@ -126,7 +90,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
           padding: const EdgeInsets.all(5),
           child: ClipOval(
             child: Icon(
-              Icons.logout,
+              Icons.arrow_back,
               color: CustomColors.primary,
             ),
           ),

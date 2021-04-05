@@ -79,7 +79,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         children: [
                           NeumorphicTextField(
                             labelText: 'Email',
-                            icon: Icon(Icons.person_outline_rounded),
+                            icon: Icon(Icons.email),
                             controller: _emailController,
                           ),
                           SizedBox(height: 10),
@@ -90,7 +90,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             controller: _passwordController,
                           ),
                           Button(
-                            text: 'Create account',
+                            text: 'Log in',
                             color: CustomColors.primary,
                             textColor: CustomColors.white,
                             onPressed: () async {
@@ -115,7 +115,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                           ),
                           Button(
-                            text: 'Already have an account? Log in!',
+                            text: "Don't have an account? Sign up!",
                             color: CustomColors.white,
                             textColor: CustomColors.darkGrey,
                             onPressed: () => {
