@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
         lightSource: LightSource.topLeft,
         depth: 6,
       ),
-      home: SignInScreen(),
+      home: SignUpScreen(),
     );
   }
 }

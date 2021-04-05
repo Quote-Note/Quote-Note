@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/sign_in_screen.dart';
+import 'package:notes_app/screens/sign_up_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/google_sign_in_button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-class SignUpScreen extends StatefulWidget {
+class SignInScreen extends StatefulWidget {
   @override
-  _SignUpScreenState createState() => _SignUpScreenState();
+  _SignInScreenState createState() => _SignInScreenState();
 }
 
-Route _routeToSignInScreen() {
+Route _routeToSignUpScreen() {
   return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
+    pageBuilder: (context, animation, secondaryAnimation) => SignUpScreen(),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      var begin = Offset(-1.0, 0.0);
+      var begin = Offset(1.0, 0.0);
       var end = Offset.zero;
       var curve = Curves.ease;
 
@@ -30,7 +30,7 @@ Route _routeToSignInScreen() {
   );
 }
 
-class _SignUpScreenState extends State<SignUpScreen> {
+class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,18 +79,18 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           password: true,
                         ),
                         Button(
-                          text: 'Create account',
+                          text: 'Sign in',
                           color: CustomColors.primary,
                           textColor: CustomColors.white,
                           onPressed: () => {},
                         ),
                         Button(
-                          text: 'Already have an account? Log in!',
+                          text: "Don't have an account? Sign up!",
                           color: CustomColors.white,
                           textColor: CustomColors.darkGrey,
                           onPressed: () => {
                             Navigator.of(context)
-                                .pushReplacement(_routeToSignInScreen())
+                                .pushReplacement(_routeToSignUpScreen())
                           },
                         ),
                       ],
