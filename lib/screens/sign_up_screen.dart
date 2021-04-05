@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
+import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/google_sign_in_button.dart';
@@ -31,6 +33,10 @@ Route _routeToSignInScreen() {
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +62,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       image: AssetImage("assets/quote_note_logo.png"),
                       height: 50.0,
                     ),
-                    SizedBox(height: 50),
+                    SizedBox(height: 25),
                     Text(
                       'Quote Note',
                       style: TextStyle(
@@ -66,34 +72,58 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       ),
                     ),
                     SizedBox(height: 50),
-                    Column(
-                      children: [
-                        NeumorphicTextField(
-                          labelText: 'Username',
-                          icon: Icon(Icons.person_outline_rounded),
-                        ),
-                        SizedBox(height: 10),
-                        NeumorphicTextField(
-                          labelText: 'Password',
-                          icon: Icon(Icons.lock_rounded),
-                          password: true,
-                        ),
-                        Button(
-                          text: 'Create account',
-                          color: CustomColors.primary,
-                          textColor: CustomColors.white,
-                          onPressed: () => {},
-                        ),
-                        Button(
-                          text: 'Already have an account? Log in!',
-                          color: CustomColors.white,
-                          textColor: CustomColors.darkGrey,
-                          onPressed: () => {
-                            Navigator.of(context)
-                                .pushReplacement(_routeToSignInScreen())
-                          },
-                        ),
-                      ],
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          NeumorphicTextField(
+                            labelText: 'Email',
+                            icon: Icon(Icons.person_outline_rounded),
+                            controller: _emailController,
+                          ),
+                          SizedBox(height: 10),
+                          NeumorphicTextField(
+                            labelText: 'Password',
+                            icon: Icon(Icons.lock_rounded),
+                            password: true,
+                            controller: _passwordController,
+                          ),
+                          Button(
+                            text: 'Create account',
+                            color: CustomColors.primary,
+                            textColor: CustomColors.white,
+                            onPressed: () async {
+                              User? user;
+
+                              if (_formKey.currentState!.validate()) {
+                                user = await Authentication.signUpWithEmail(
+                                    context: context,
+                                    email: _emailController.text,
+                                    password: _passwordController.text);
+                              }
+
+                              if (user != null) {
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (context) => UserInfoScreen(
+                                      user: user!,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                          Button(
+                            text: 'Already have an account? Log in!',
+                            color: CustomColors.white,
+                            textColor: CustomColors.darkGrey,
+                            onPressed: () => {
+                              Navigator.of(context)
+                                  .pushReplacement(_routeToSignInScreen())
+                            },
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/sign_up_screen.dart';
-import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/app_bar_title.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/card.dart';
@@ -73,16 +71,11 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       bottomNavigationBar: AppBarBottom(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            AppBar(
-              elevation: 0,
-              backgroundColor: CustomColors.white,
-              title: AppBarTitle(
-                  photoUrl: _user.photoURL!, name: _user.displayName!),
-            ),
-          ],
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: CustomColors.white,
+          title: AppBarTitle(
+              photoUrl: _user.photoURL!, name: _user.displayName!, email: _user.email!,),
         ),
       ),
       body: SafeArea(

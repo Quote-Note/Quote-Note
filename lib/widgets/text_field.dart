@@ -6,11 +6,13 @@ class NeumorphicTextField extends StatefulWidget {
   final String labelText;
   final Icon icon;
   final bool password;
+  final TextEditingController controller;
 
   NeumorphicTextField(
       {Key? key,
       required this.labelText,
       required this.icon,
+      required this.controller,
       this.password = false})
       : super(key: key);
 
@@ -30,16 +32,20 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         ),
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: TextFormField(
+          controller: widget.controller,
           style: TextStyle(color: CustomColors.lightGrey),
           decoration: InputDecoration(
             icon: widget.icon,
             border: InputBorder.none,
             labelText: widget.labelText,
           ),
+          validator: (String? value) {
+              if (value!.isEmpty) {
+                return 'Please enter some text';
+              }
+              return null;
+            },
           obscureText: widget.password,
-          onSaved: (String? value) {
-            //TODO: Username Input
-          },
         ),
       ),
     );
