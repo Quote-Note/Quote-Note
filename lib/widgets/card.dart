@@ -25,12 +25,13 @@ class NeumorphicCard extends StatefulWidget {
 class _NeumorphicCardState extends State<NeumorphicCard> {
   @override
   Widget build(BuildContext context) {
-    return Neumorphic(
+    return NeumorphicButton(
+      onPressed: widget.onPressed,
+      padding: const EdgeInsets.all(0),
       style: NeumorphicStyle(
         boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(60)),
         depth: 4,
         intensity: 1,
-        color: CustomColors.primary,
       ),
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -48,30 +49,34 @@ class _NeumorphicCardState extends State<NeumorphicCard> {
             decoration: BoxDecoration(
               color: CustomColors.white,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(height: 10),
-                Text(widget.groupType,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(height: 10),
+                  Text(widget.groupType,
+                      style: TextStyle(
+                        color: widget.color
+                      )),
+                  Text(
+                    widget.groupName,
                     style: TextStyle(
-                      color: widget.color
-                    )),
-                Text(
-                  widget.groupName,
-                  style: TextStyle(
-                    color: CustomColors.darkGrey,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                      color: CustomColors.darkGrey,
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                Text(
-                  widget.adminNames.join(' & '),
-                  style: TextStyle(
-                    color: CustomColors.lightGrey,
+                  Text(
+                    widget.adminNames.join(' & '),
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: CustomColors.lightGrey,
+                    ),
                   ),
-                ),
-                SizedBox(height: 10),
-              ],
+                  SizedBox(height: 30),
+                ],
+              ),
             ),
           ),
         ],

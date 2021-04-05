@@ -33,7 +33,7 @@ class _ButtonState extends State<Button> {
         style: NeumorphicStyle(
           color: widget.color,
           depth: 3,
-          shape: NeumorphicShape.concave,
+          shape: NeumorphicShape.flat,
           intensity: 1,
         ),
         margin: const EdgeInsets.all(10),

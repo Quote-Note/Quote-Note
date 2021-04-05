@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/sign_in_screen.dart';
+import 'package:notes_app/screens/sign_up_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/app_bar_title.dart';
+import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/card.dart';
+import 'package:notes_app/widgets/note_panel.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})
@@ -18,28 +21,22 @@ class UserInfoScreen extends StatefulWidget {
   _UserInfoScreenState createState() => _UserInfoScreenState();
 }
 
+class Group {
+  String type = 'No type';
+  String name = 'No group';
+  Color color = Colors.red;
+  List<String> admins = ['No Admins'];
+
+  Group(String type, String name, Color color, List<String> admins) {
+    this.type = type;
+    this.name = name;
+    this.color = color;
+    this.admins = admins;
+  }
+}
+
 class _UserInfoScreenState extends State<UserInfoScreen> {
   late User _user;
-  bool _isSigningOut = false;
-
-  Route _routeToSignInScreen() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 
   @override
   void initState() {
@@ -48,12 +45,32 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     super.initState();
   }
 
-  List<String> teachers = ["Mr Grabski", "Mr Pegg", "Miss Collins"];
-  int _index = 0;
+  //Dummy data
+  List<Group> groups = [
+    Group('Class', 'Maths', CustomColors.yellow, [
+      "Mr Grabski",
+      "Mr Pegg",
+      "Miss Collins",
+      "Miss Collins",
+      "Miss Collins"
+    ]),
+    Group('Class', 'English', Colors.red,
+        ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"]),
+    Group('Staff', 'Announcements', Colors.teal, ["Mr Grabski"]),
+  ];
+
+  List<String> notes = [
+    'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
+    'Blah blah blahadfghasdf gdfs dfg sdfhgd',
+    'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
+    'Blah blah blahadfghasdf gdfs dfg sdfhgd',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.white,
+      bottomNavigationBar: AppBarBottom(),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: Column(
@@ -70,96 +87,31 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(
-            left: 16.0,
-            right: 16.0,
-            bottom: 20.0,
-          ),
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-          height: 316, // card height
-          child: PageView.builder(
-            itemCount: 10,
-            clipBehavior: Clip.none,
-            controller: PageController(viewportFraction: (292/MediaQuery.of(context).size.width)),
-            onPageChanged: (int index) => setState(() => _index = index),
-            itemBuilder: (_, i) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: NeumorphicCard(groupName: 'Maths', color: CustomColors.primary, onPressed: () => {}, groupType: 'Class', adminNames: teachers),
-              );
-            },
-          ),
-        ),
-              //NeumorphicCard(groupName: 'Maths', color: CustomColors.primary, onPressed: () => {}, groupType: 'Class', adminNames: teachers)
-              /* SizedBox(height: 8.0),
-              Text(
-                _user.displayName!,
-                style: TextStyle(
-                  color: CustomColors.darkGrey,
-                  fontSize: 26,
+                height: 316,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  clipBehavior: Clip.none,
+                  itemCount: groups.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: NeumorphicCard(
+                          groupName: groups[index].name,
+                          color: groups[index].color,
+                          onPressed: () => {},
+                          groupType: groups[index].type,
+                          adminNames: groups[index].admins),
+                    );
+                  },
                 ),
               ),
-              SizedBox(height: 8.0),
-              Text(
-                '( ${_user.email!} )',
-                style: TextStyle(
-                  color: CustomColors.darkGrey,
-                  fontSize: 20,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              SizedBox(height: 24.0),
-              Text(
-                'You are now signed in using your Google account. To sign out of your account click the "Sign Out" button below.',
-                style: TextStyle(
-                    color: CustomColors.lightGrey.withOpacity(0.8),
-                    fontSize: 14,
-                    letterSpacing: 0.2),
-              ), */
-              //SizedBox(height: 16.0),
-              _isSigningOut
-                  ? CircularProgressIndicator(
-                      valueColor:
-                          AlwaysStoppedAnimation<Color>(CustomColors.primary),
-                    )
-                  : ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Colors.teal,
-                        ),
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      onPressed: () async {
-                        setState(() {
-                          _isSigningOut = true;
-                        });
-                        await Authentication.signOut(context: context);
-                        setState(() {
-                          _isSigningOut = false;
-                        });
-                        Navigator.of(context)
-                            .pushReplacement(_routeToSignInScreen());
-                      },
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
-                        child: Text(
-                          'Sign Out',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ),
-                    ),
+              SizedBox(height: 20),
+              NeumorphicNoteOverview(title: 'New Notes', notes: notes, numberOfNotes: 3,),
             ],
           ),
         ),

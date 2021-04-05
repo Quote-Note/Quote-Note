@@ -26,7 +26,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                 color: CustomColors.white,
                 depth: 3,
                 intensity: 1,
-                shape: NeumorphicShape.concave,
+                shape: NeumorphicShape.flat,
                 boxShape:
                     NeumorphicBoxShape.circle(),
               ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'screens/sign_in_screen.dart';
+import 'screens/sign_up_screen.dart';
 
 FirebaseAnalytics? analytics;
 
@@ -14,6 +14,14 @@ void main() async {
   runApp(MyApp());
 }
 
+class RemoveGlow extends ScrollBehavior {
+  @override
+  Widget buildViewportChrome(
+      BuildContext context, Widget child, AxisDirection axisDirection) {
+    return child;
+  }
+}
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -21,6 +29,12 @@ class MyApp extends StatelessWidget {
       title: 'QuoteNote',
       debugShowCheckedModeBanner: false,
       themeMode: ThemeMode.light,
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: RemoveGlow(),
+          child: child!,
+        );
+      },
       theme: NeumorphicThemeData(
         baseColor: CustomColors.white,
         accentColor: CustomColors.lightGrey,
