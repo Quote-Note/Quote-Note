@@ -1,15 +1,19 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:crypto/crypto.dart';
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/widgets/app_bar_profile.dart';
-import 'package:notes_app/widgets/app_bar_title.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
-import 'package:notes_app/widgets/card.dart';
-import 'package:notes_app/widgets/note_panel.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -40,6 +44,10 @@ class Group {
 class _ProfileScreenState extends State<ProfileScreen> {
   late User _user;
 
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+
   @override
   void initState() {
     _user = widget._user;
@@ -47,12 +55,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  Future<File> pickFile() async {
+    FilePickerResult result =
+        (await FilePicker.platform.pickFiles(type: FileType.image))!;
+
+    if (result != null) {
+      File file = File(result.files.single.path!);
+      return file;
+    } else {
+      // User canceled the picker
+      throw ("User cancelled file picker");
+    }
+  }
+
+  Future<String> uploadToCloudinary(File file) async {
+    var time = DateTime.now().toUtc().microsecondsSinceEpoch;
+    var signatureString =
+        'timestamp=${time}OKSk1CR7B9zx5HugCSsJtyxgMHc';
+    var digest = sha1.convert(utf8.encode(signatureString));
+    print(digest);
+    var bytes = file.readAsBytesSync();
+    var formData = FormData.fromMap({
+      'file': bytes,
+      'api_key': '685718363293648',
+      'timestamp': time,
+      'signature': digest
+    }); 
+    print(formData);
+    var response = await Dio().post(
+        'https://api.cloudinary.com/v1_1/quotenote/image/upload',
+        data: formData);
+
+    print(response.statusMessage);
+    Map<String, dynamic> responseJson = json.decode(response.data);
+    
+    return responseJson['url'];
+  }
 
   @override
   Widget build(BuildContext context) {
+    File profilePic;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: CustomColors.white,
@@ -106,7 +148,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(width: MediaQuery.of(context).size.width/3.5,),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                ),
                                 Neumorphic(
                                   style: NeumorphicStyle(
                                     depth: 3,
@@ -119,7 +164,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ? Image.network(
                                             widget._user.photoURL.toString(),
                                             scale: 1,
-                                            fit: BoxFit.fitHeight,
                                           )
                                         : Icon(
                                             Icons.person,
@@ -128,9 +172,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                   ),
                                 ),
-                                SizedBox(width: 20,),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                // File picker
                                 NeumorphicButton(
-                                  onPressed: () => {},
+                                  onPressed: () async {
+                                    File profilePic = await pickFile();
+                                    String photoURL =
+                                        await uploadToCloudinary(profilePic);
+                                    _user.updateProfile(photoURL: photoURL);
+                                  },
                                   style: NeumorphicStyle(
                                     depth: 3,
                                     intensity: 1,
@@ -148,63 +200,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                             Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          NeumorphicTextField(
-                            labelText: 'Name',
-                            icon: Icon(Icons.person_outline_rounded),
-                            controller: _nameController,
-                          ),
-                          SizedBox(height: 10),
-                          NeumorphicTextField(
-                            labelText: 'Email',
-                            icon: Icon(Icons.email),
-                            controller: _emailController,
-                          ),
-                          Button(
-                            text: 'Change Password',
-                            color: CustomColors.white,
-                            textColor: CustomColors.darkGrey,
-                            onPressed: () async {
-                              User? user;
-
-                              
-                              if (user != null) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
-                                      user: user,
-                                    ),
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  NeumorphicTextField(
+                                    labelText: 'Name',
+                                    icon: Icon(Icons.person_outline_rounded),
+                                    controller: _nameController,
                                   ),
-                                );
-                              }
-                            },
-                          ),
-                          Button(
-                            text: 'Save',
-                            color: CustomColors.primary,
-                            textColor: CustomColors.white,
-                            onPressed: () async {
-                              User? user;
-
-                              
-                              if (user != null) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
-                                      user: user,
-                                    ),
+                                  SizedBox(height: 10),
+                                  NeumorphicTextField(
+                                    labelText: 'Email',
+                                    icon: Icon(Icons.email),
+                                    controller: _emailController,
                                   ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                                  Button(
+                                      text: 'Change Password',
+                                      color: CustomColors.white,
+                                      textColor: CustomColors.darkGrey,
+                                      onPressed: () async {
+                                        Authentication().resetPassword(
+                                            context: context,
+                                            emailAddress: widget._user.email);
+                                      }),
+                                  Button(
+                                    text: 'Save',
+                                    color: CustomColors.primary,
+                                    textColor: CustomColors.white,
+                                    onPressed: () async {
+                                      User? user;
+
+                                      if (user != null) {
+                                        Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                UserInfoScreen(
+                                              user: user,
+                                            ),
+                                          ),
+                                        );
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
                           ],
-                          
                         ),
                       ),
                     ),

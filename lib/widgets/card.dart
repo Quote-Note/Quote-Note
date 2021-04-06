@@ -33,49 +33,48 @@ class _NeumorphicCardState extends State<NeumorphicCard> {
         depth: 4,
         intensity: 1,
       ),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
+      child: Flex(
+        direction: Axis.vertical,
         children: <Widget>[
           Container(
-            height: 316.0,
-            width: 282.0,
+            height: 168,
+            width: 282,
             decoration: BoxDecoration(
               color: widget.color,
             ),
           ),
-          Container(
-            height: 168,
-            width: 282.0,
-            decoration: BoxDecoration(
-              color: CustomColors.white,
-            ),
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(height: 10),
-                  Text(widget.groupType,
+          Expanded(
+            child: Container(
+              width: 282,
+              decoration: BoxDecoration(
+                color: CustomColors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(height: 10),
+                    Text(widget.groupType,
+                        style: TextStyle(color: widget.color)),
+                    Text(
+                      widget.groupName,
                       style: TextStyle(
-                        color: widget.color
-                      )),
-                  Text(
-                    widget.groupName,
-                    style: TextStyle(
-                      color: CustomColors.darkGrey,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+                        color: CustomColors.darkGrey,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    widget.adminNames.join(' & '),
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: CustomColors.lightGrey,
+                    Text(
+                      widget.adminNames.join(' & '),
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: CustomColors.lightGrey,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 30),
-                ],
+                    SizedBox(height: 30),
+                  ],
+                ),
               ),
             ),
           ),
