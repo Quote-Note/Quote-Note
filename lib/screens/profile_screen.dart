@@ -13,6 +13,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/update_profile.dart';
 import 'package:notes_app/widgets/app_bar_profile.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
@@ -34,20 +35,6 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class Group {
-  String type = 'No type';
-  String name = 'No group';
-  Color color = Colors.red;
-  List<String> admins = ['No Admins'];
-
-  Group(String type, String name, Color color, List<String> admins) {
-    this.type = type;
-    this.name = name;
-    this.color = color;
-    this.admins = admins;
-  }
-}
-
 class _ProfileScreenState extends State<ProfileScreen> {
   late User _user;
 
@@ -66,61 +53,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  Future<File> pickFile() async {
-    FilePickerResult result =
-        (await FilePicker.platform.pickFiles(type: FileType.image))!;
-
-    if (result.count > 0) {
-      File file = File(result.files.single.path!);
-      return file;
-    } else {
-      // User canceled the picker
-      throw ("User cancelled file picker");
-    }
-  }
-
   Future<String> uploadToCloudinary(File file) async {
     setState(() {
       isUpdating = true;
     });
-    String? url;
-    try {
-      CloudinaryResponse? response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(file.path,
-            resourceType: CloudinaryResourceType.Image),
-      );
-      CloudinaryImage image = CloudinaryImage(response.secureUrl);
-      url = image
-          .transform()
-          .width(200)
-          .quality('auto:eco')
-          .crop('limit')
-          .generate();
-      print(response.secureUrl);
-    } on CloudinaryException catch (e) {
-      print(e.message);
-      print(e.request);
-    }
+
+    String returnResult = await Profile.uploadToCloudinary(file, cloudinary);
+    
     setState(() {
       isUpdating = false;
     });
-    if (url != null) {
-      return url;
-    }
-    return '';
+    return returnResult;
   }
 
-  void saveProfile() async {
+  void saveProfile({String email = '', String name = ''}) async {
     setState(() {
       isSaving = true;
     });
-    await _user.updateProfile(photoURL: tempURL).then((value) async {
-      await _user
-          .reload()
-          .then((value) => {imageCache!.clear()})
-          .then((value) => {imageCache!.clearLiveImages()})
-          .then((value) => {_user = FirebaseAuth.instance.currentUser!});
-    });
+
+    Profile.saveProfile(email, name, tempURL, _user);
+
     setState(() {
       isSaving = false;
     });
@@ -195,21 +147,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: SizedBox(
                                     width: 100,
                                     height: 100,
-                                    child: !isUpdating ? ClipOval(
-                                      child: tempURL != null
-                                          ? Image.network(
-                                              tempURL,
-                                              key: ValueKey(
-                                                  Random().nextInt(100)),
-                                              scale: 1,
-                                              fit: BoxFit.fitWidth,
-                                            )
-                                          : Icon(
-                                              Icons.person,
-                                              color: CustomColors.darkGrey,
-                                              size: 100,
-                                            ),
-                                    ) : CircularProgressIndicator(),
+                                    child: !isUpdating
+                                        ? ClipOval(
+                                            child: tempURL != null
+                                                ? Image.network(
+                                                    tempURL,
+                                                    key: ValueKey(
+                                                        Random().nextInt(100)),
+                                                    scale: 1,
+                                                    fit: BoxFit.fitWidth,
+                                                  )
+                                                : Icon(
+                                                    Icons.person,
+                                                    color:
+                                                        CustomColors.darkGrey,
+                                                    size: 100,
+                                                  ),
+                                          )
+                                        : CircularProgressIndicator(),
                                   ),
                                 ),
                                 SizedBox(
@@ -218,7 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 // File picker
                                 NeumorphicButton(
                                   onPressed: () async {
-                                    File profilePic = await pickFile();
+                                    File profilePic = await Profile.pickFile();
                                     if (profilePic != null) {
                                       String _photoURL =
                                           await uploadToCloudinary(profilePic);
@@ -267,25 +222,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             context: context,
                                             emailAddress: widget._user.email);
                                       }),
-                                  !isSaving ? Button(
-                                    text: 'Save',
-                                    color: CustomColors.primary,
-                                    textColor: CustomColors.white,
-                                    onPressed: () async {
-                                      User? user;
-                                      saveProfile();
-                                      if (user != null) {
-                                        Navigator.of(context).pushReplacement(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                UserInfoScreen(
-                                              user: user,
-                                            ),
-                                          ),
-                                        );
-                                      }
-                                    },
-                                  ) : CircularProgressIndicator(),
+                                  !isSaving
+                                      ? Button(
+                                          text: 'Save',
+                                          color: CustomColors.primary,
+                                          textColor: CustomColors.white,
+                                          onPressed: () async {
+                                            User? user;
+
+                                            saveProfile(
+                                                email:
+                                                    _emailController.value.text,
+                                                name:
+                                                    _nameController.value.text);
+
+                                            if (user != null) {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserInfoScreen(
+                                                    user: user,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        )
+                                      : CircularProgressIndicator(),
                                 ],
                               ),
                             ),
