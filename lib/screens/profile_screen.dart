@@ -10,8 +10,8 @@ import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/utils/profile.dart';
-import 'package:notes_app/widgets/app_bar_profile.dart';
-import 'package:notes_app/widgets/bottom_app_bar.dart';
+import 'package:notes_app/widgets/app_bars/app_bar_profile.dart';
+import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 

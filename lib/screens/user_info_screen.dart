@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/widgets/app_bar_title.dart';
-import 'package:notes_app/widgets/bottom_app_bar.dart';
+import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
+import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/card.dart';
 import 'package:notes_app/widgets/note_panel.dart';
 
