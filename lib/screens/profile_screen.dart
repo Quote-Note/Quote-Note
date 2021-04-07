@@ -87,10 +87,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
-      Authentication.customErrorSnackBar(
+      Authentication.customFeedbackSnackBar(
         content: 'Saved profile',
       ),
     );
+
+    _emailController.clear();
+    _nameController.clear();
 
     setState(() {
       isSaving = false;
