@@ -56,14 +56,21 @@ class _AppBarProfileState extends State<AppBarProfile> {
             boxShape: NeumorphicBoxShape.circle(),
           ),
           padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: widget.user!.photoURL != null
-                ? Image.network(
-                    widget.user!.photoURL.toString(),
-                    scale: 2.2,
-                    fit: BoxFit.fitHeight,
-                  )
-                : Icon(Icons.person, color: CustomColors.darkGrey, size: 30,),
+          child: SizedBox(
+            height: 40,
+            width: 40,
+                      child: ClipOval(
+              child: widget.user!.photoURL != null
+                  ? Image.network(
+                      widget.user!.photoURL.toString(),
+                      fit: BoxFit.fitWidth,
+                    )
+                  : Icon(
+                      Icons.person,
+                      color: CustomColors.darkGrey,
+                      size: 30,
+                    ),
+            ),
           ),
         ),
         Expanded(

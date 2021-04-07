@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/res/custom_colors.dart';
@@ -9,8 +11,7 @@ import 'package:notes_app/utils/auth.dart';
 class AppBarTitle extends StatefulWidget {
   final User? user;
 
-  const AppBarTitle(
-      {required this.user});
+  const AppBarTitle({required this.user});
 
   @override
   _AppBarTitleState createState() => _AppBarTitleState();
@@ -55,14 +56,22 @@ class _AppBarTitleState extends State<AppBarTitle> {
             boxShape: NeumorphicBoxShape.circle(),
           ),
           padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: widget.user!.photoURL != null
-                ? Image.network(
-                    widget.user!.photoURL.toString(),
-                    scale: 2.2,
-                    fit: BoxFit.fitHeight,
-                  )
-                : Icon(Icons.person, color: CustomColors.darkGrey, size: 30,),
+          child: SizedBox(
+            height: 40,
+            width: 40,
+                      child: ClipOval(
+              child: widget.user!.photoURL != null
+                  ? Image.network(
+                      widget.user!.photoURL.toString(),
+                      key: ValueKey(new Random().nextInt(100)),
+                      fit: BoxFit.fitWidth,
+                    )
+                  : Icon(
+                      Icons.person,
+                      color: CustomColors.darkGrey,
+                      size: 30,
+                    ),
+            ),
           ),
         ),
         Expanded(
@@ -70,15 +79,18 @@ class _AppBarTitleState extends State<AppBarTitle> {
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
                 (widget.user!.displayName != null
-                  ? widget.user!.displayName
-                  : widget.user!.email.toString().substring(0, widget.user!.email.toString().indexOf('@')))!,
+                    ? widget.user!.displayName
+                    : widget.user!.email.toString().substring(
+                        0, widget.user!.email.toString().indexOf('@')))!,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: CustomColors.darkGrey,
                 )),
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         NeumorphicButton(
           onPressed: toggleAdmin,
           style: NeumorphicStyle(
@@ -94,9 +106,14 @@ class _AppBarTitleState extends State<AppBarTitle> {
                     color: CustomColors.darkGrey),
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         NeumorphicButton(
-          onPressed: () => {Navigator.of(context).pushReplacement(_routeTo(ProfileScreen(user: widget.user!)))},
+          onPressed: () => {
+            Navigator.of(context)
+                .pushReplacement(_routeTo(ProfileScreen(user: widget.user!)))
+          },
           style: NeumorphicStyle(
             depth: 3,
             intensity: 1,
@@ -110,7 +127,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
             ),
           ),
         ),
-        SizedBox(width: 10,),
+        SizedBox(
+          width: 10,
+        ),
         NeumorphicButton(
           onPressed: () async {
             setState(() {});

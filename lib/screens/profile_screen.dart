@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +17,11 @@ import 'package:notes_app/widgets/app_bar_profile.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
+
+final cloudinary = CloudinaryPublic('quotenote', 'profile', cache: false);
+String tempURL = '';
+bool isSaving = false;
+bool isUpdating = false;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key, required User user})
@@ -52,6 +59,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     _user = widget._user;
 
+    if (_user.photoURL != null) {
+      tempURL = _user.photoURL!;
+    }
+
     super.initState();
   }
 
@@ -59,7 +70,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     FilePickerResult result =
         (await FilePicker.platform.pickFiles(type: FileType.image))!;
 
-    if (result != null) {
+    if (result.count > 0) {
       File file = File(result.files.single.path!);
       return file;
     } else {
@@ -69,32 +80,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<String> uploadToCloudinary(File file) async {
-    var time = DateTime.now().toUtc().microsecondsSinceEpoch;
-    var signatureString =
-        'timestamp=${time}OKSk1CR7B9zx5HugCSsJtyxgMHc';
-    var digest = sha1.convert(utf8.encode(signatureString));
-    print(digest);
-    var bytes = file.readAsBytesSync();
-    var formData = FormData.fromMap({
-      'file': bytes,
-      'api_key': '685718363293648',
-      'timestamp': time,
-      'signature': digest
-    }); 
-    print(formData);
-    var response = await Dio().post(
-        'https://api.cloudinary.com/v1_1/quotenote/image/upload',
-        data: formData);
+    setState(() {
+      isUpdating = true;
+    });
+    String? url;
+    try {
+      CloudinaryResponse? response = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile(file.path,
+            resourceType: CloudinaryResourceType.Image),
+      );
+      CloudinaryImage image = CloudinaryImage(response.secureUrl);
+      url = image
+          .transform()
+          .width(200)
+          .quality('auto:eco')
+          .crop('limit')
+          .generate();
+      print(response.secureUrl);
+    } on CloudinaryException catch (e) {
+      print(e.message);
+      print(e.request);
+    }
+    setState(() {
+      isUpdating = false;
+    });
+    if (url != null) {
+      return url;
+    }
+    return '';
+  }
 
-    print(response.statusMessage);
-    Map<String, dynamic> responseJson = json.decode(response.data);
-    
-    return responseJson['url'];
+  void saveProfile() async {
+    setState(() {
+      isSaving = true;
+    });
+    await _user.updateProfile(photoURL: tempURL).then((value) async {
+      await _user
+          .reload()
+          .then((value) => {imageCache!.clear()})
+          .then((value) => {imageCache!.clearLiveImages()})
+          .then((value) => {_user = FirebaseAuth.instance.currentUser!});
+    });
+    setState(() {
+      isSaving = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    File profilePic;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: CustomColors.white,
@@ -159,17 +192,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     boxShape: NeumorphicBoxShape.circle(),
                                   ),
                                   padding: const EdgeInsets.all(5),
-                                  child: ClipOval(
-                                    child: widget._user.photoURL != null
-                                        ? Image.network(
-                                            widget._user.photoURL.toString(),
-                                            scale: 1,
-                                          )
-                                        : Icon(
-                                            Icons.person,
-                                            color: CustomColors.darkGrey,
-                                            size: 85,
-                                          ),
+                                  child: SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: !isUpdating ? ClipOval(
+                                      child: tempURL != null
+                                          ? Image.network(
+                                              tempURL,
+                                              key: ValueKey(
+                                                  Random().nextInt(100)),
+                                              scale: 1,
+                                              fit: BoxFit.fitWidth,
+                                            )
+                                          : Icon(
+                                              Icons.person,
+                                              color: CustomColors.darkGrey,
+                                              size: 100,
+                                            ),
+                                    ) : CircularProgressIndicator(),
                                   ),
                                 ),
                                 SizedBox(
@@ -179,9 +219,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 NeumorphicButton(
                                   onPressed: () async {
                                     File profilePic = await pickFile();
-                                    String photoURL =
-                                        await uploadToCloudinary(profilePic);
-                                    _user.updateProfile(photoURL: photoURL);
+                                    if (profilePic != null) {
+                                      String _photoURL =
+                                          await uploadToCloudinary(profilePic);
+                                      setState(() {
+                                        tempURL = _photoURL;
+                                      });
+                                    }
                                   },
                                   style: NeumorphicStyle(
                                     depth: 3,
@@ -223,13 +267,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             context: context,
                                             emailAddress: widget._user.email);
                                       }),
-                                  Button(
+                                  !isSaving ? Button(
                                     text: 'Save',
                                     color: CustomColors.primary,
                                     textColor: CustomColors.white,
                                     onPressed: () async {
                                       User? user;
-
+                                      saveProfile();
                                       if (user != null) {
                                         Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
@@ -241,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         );
                                       }
                                     },
-                                  ),
+                                  ) : CircularProgressIndicator(),
                                 ],
                               ),
                             ),
