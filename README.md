@@ -1,5 +1,7 @@
 # Quote Note
 
+Website: www.quotenote.dev
+
 ## [Design Document](https://www.figma.com/file/CvOGO5cqKNDC0xyAc8XqRK/Note-App?node-id=0%3A1)
 
 ### Signup Page
