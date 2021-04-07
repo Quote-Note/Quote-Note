@@ -3,7 +3,9 @@ import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class AppBarBottom extends StatefulWidget {
-  const AppBarBottom();
+  final List<Widget> buttons;
+
+  const AppBarBottom({required this.buttons});
 
   @override
   _AppBarBottomState createState() => _AppBarBottomState();
@@ -26,6 +28,21 @@ class _AppBarBottomState extends State<AppBarBottom> {
                 color: CustomColors.white,
               ),
               padding: const EdgeInsets.all(5),
+              child: ListView.builder(
+                scrollDirection: Axis.vertical,
+                itemCount: widget.buttons.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: EdgeInsets.symmetric(vertical: 3),
+                    child: Expanded(
+                      child: Center(
+                          child: widget.buttons.length > 0
+                              ? widget.buttons[index]
+                              : Container()),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

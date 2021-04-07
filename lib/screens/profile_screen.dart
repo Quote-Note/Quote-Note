@@ -105,7 +105,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: CustomColors.white,
-      bottomNavigationBar: AppBarBottom(),
+      bottomNavigationBar: AppBarBottom(buttons: List.empty()),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
