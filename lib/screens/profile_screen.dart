@@ -1,11 +1,7 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:crypto/crypto.dart';
-import 'package:dio/dio.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -13,7 +9,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
-import 'package:notes_app/utils/update_profile.dart';
+import 'package:notes_app/utils/profile.dart';
 import 'package:notes_app/widgets/app_bar_profile.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
@@ -58,20 +54,43 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isUpdating = true;
     });
 
-    String returnResult = await Profile.uploadToCloudinary(file, cloudinary);
-    
+    String returnResult =
+        await Profile.uploadToCloudinary(context, file, cloudinary);
+
     setState(() {
       isUpdating = false;
     });
     return returnResult;
   }
 
-  void saveProfile({String email = '', String name = ''}) async {
+  void saveProfile({required BuildContext context, String email = '', String name = ''}) async {
     setState(() {
       isSaving = true;
     });
 
-    Profile.saveProfile(email, name, tempURL, _user);
+    //await Profile.saveProfile(email, name, tempURL, _user);
+
+    if (email != '') {
+      await _user.updateEmail(email).then((value) => _user.reload());
+    }
+
+    if (name != '') {
+      await _user.updateProfile(displayName: name);
+    }
+
+    await _user.updateProfile(photoURL: tempURL).then((value) async {
+      await _user
+          .reload()
+          .then((value) => {imageCache!.clear()})
+          .then((value) => {imageCache!.clearLiveImages()})
+          .then((value) => {_user = FirebaseAuth.instance.currentUser!});
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      Authentication.customErrorSnackBar(
+        content: 'Saved profile',
+      ),
+    );
 
     setState(() {
       isSaving = false;
@@ -149,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     height: 100,
                                     child: !isUpdating
                                         ? ClipOval(
-                                            child: tempURL != null
+                                            child: tempURL != ''
                                                 ? Image.network(
                                                     tempURL,
                                                     key: ValueKey(
@@ -173,7 +192,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 // File picker
                                 NeumorphicButton(
                                   onPressed: () async {
-                                    File profilePic = await Profile.pickFile();
+                                    File? profilePic = await Profile.pickFile();
                                     if (profilePic != null) {
                                       String _photoURL =
                                           await uploadToCloudinary(profilePic);
@@ -218,7 +237,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       color: CustomColors.white,
                                       textColor: CustomColors.darkGrey,
                                       onPressed: () async {
-                                        Authentication().resetPassword(
+                                        Profile.resetPassword(
                                             context: context,
                                             emailAddress: widget._user.email);
                                       }),
@@ -231,6 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             User? user;
 
                                             saveProfile(
+                                              context: context,
                                                 email:
                                                     _emailController.value.text,
                                                 name:

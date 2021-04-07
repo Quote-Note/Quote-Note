@@ -47,17 +47,6 @@ class Authentication {
     return firebaseApp;
   }
 
-  void resetPassword({required BuildContext context, String? emailAddress}){
-    FirebaseAuth auth = FirebaseAuth.instance;
-    auth.sendPasswordResetEmail(email: emailAddress!).then((value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customFeedbackSnackBar(
-              content: 'Sent a reset link to $emailAddress',
-            ),
-          );
-    });
-  }
-
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
