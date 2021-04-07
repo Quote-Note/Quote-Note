@@ -2,10 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/screens/profile_screen.dart';
-import 'package:notes_app/screens/sign_in_screen.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
-import 'package:notes_app/utils/auth.dart';
 
 class AppBarProfile extends StatefulWidget {
   final User? user;
@@ -56,14 +53,21 @@ class _AppBarProfileState extends State<AppBarProfile> {
             boxShape: NeumorphicBoxShape.circle(),
           ),
           padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: widget.user!.photoURL != null
-                ? Image.network(
-                    widget.user!.photoURL.toString(),
-                    scale: 2.2,
-                    fit: BoxFit.fitHeight,
-                  )
-                : Icon(Icons.person, color: CustomColors.darkGrey, size: 30,),
+          child: SizedBox(
+            height: 40,
+            width: 40,
+                      child: ClipOval(
+              child: widget.user!.photoURL != null
+                  ? Image.network(
+                      widget.user!.photoURL.toString(),
+                      fit: BoxFit.fitWidth,
+                    )
+                  : Icon(
+                      Icons.person,
+                      color: CustomColors.darkGrey,
+                      size: 30,
+                    ),
+            ),
           ),
         ),
         Expanded(

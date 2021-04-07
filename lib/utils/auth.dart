@@ -3,15 +3,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
 
 class Authentication {
-  static SnackBar customSnackBar({required String content}) {
+  static SnackBar customErrorSnackBar({required String content}) {
     return SnackBar(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.red[700],
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: TextStyle(color: Colors.white, letterSpacing: 0.5),
+      ),
+    );
+  }
+
+  static SnackBar customFeedbackSnackBar({required String content}) {
+    return SnackBar(
+      backgroundColor: CustomColors.primary,
+      content: Text(
+        content,
+        style: TextStyle(color: Colors.white, letterSpacing: 0.5),
       ),
     );
   }
@@ -62,20 +73,20 @@ class Authentication {
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'The account already exists with a different credential',
             ),
           );
         } else if (e.code == 'invalid-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'Error occurred while accessing credentials. Try again.',
             ),
           );
         }
       } catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
-          Authentication.customSnackBar(
+          Authentication.customErrorSnackBar(
             content: 'Error occurred using Google Sign In. Try again.',
           ),
         );
@@ -95,13 +106,13 @@ class Authentication {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'The password provided is too weak.',
             ),
           );
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'The account already exists for that email.',
             ),
           );
@@ -122,13 +133,13 @@ class Authentication {
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'No user found for that email.',
             ),
           );
       } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customSnackBar(
+            Authentication.customErrorSnackBar(
               content: 'Wrong password provided for that user.',
             ),
           );
@@ -147,7 +158,7 @@ class Authentication {
       await FirebaseAuth.instance.signOut();
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        Authentication.customSnackBar(
+        Authentication.customErrorSnackBar(
           content: 'Error signing out. Try again.',
         ),
       );

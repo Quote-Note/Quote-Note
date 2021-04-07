@@ -1,16 +1,24 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/profile.dart';
 import 'package:notes_app/widgets/app_bar_profile.dart';
-import 'package:notes_app/widgets/app_bar_title.dart';
 import 'package:notes_app/widgets/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
-import 'package:notes_app/widgets/card.dart';
-import 'package:notes_app/widgets/note_panel.dart';
 import 'package:notes_app/widgets/text_field.dart';
+
+final cloudinary = CloudinaryPublic('quotenote', 'profile', cache: false);
+String tempURL = '';
+bool isSaving = false;
+bool isUpdating = false;
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({Key? key, required User user})
@@ -23,33 +31,71 @@ class ProfileScreen extends StatefulWidget {
   _ProfileScreenState createState() => _ProfileScreenState();
 }
 
-class Group {
-  String type = 'No type';
-  String name = 'No group';
-  Color color = Colors.red;
-  List<String> admins = ['No Admins'];
-
-  Group(String type, String name, Color color, List<String> admins) {
-    this.type = type;
-    this.name = name;
-    this.color = color;
-    this.admins = admins;
-  }
-}
-
 class _ProfileScreenState extends State<ProfileScreen> {
   late User _user;
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   void initState() {
     _user = widget._user;
 
+    if (_user.photoURL != null) {
+      tempURL = _user.photoURL!;
+    }
+
     super.initState();
   }
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  Future<String> uploadToCloudinary(File file) async {
+    setState(() {
+      isUpdating = true;
+    });
+
+    String returnResult =
+        await Profile.uploadToCloudinary(context, file, cloudinary);
+
+    setState(() {
+      isUpdating = false;
+    });
+    return returnResult;
+  }
+
+  void saveProfile({required BuildContext context, String email = '', String name = ''}) async {
+    setState(() {
+      isSaving = true;
+    });
+
+    //await Profile.saveProfile(email, name, tempURL, _user);
+
+    if (email != '') {
+      await _user.updateEmail(email).then((value) => _user.reload());
+    }
+
+    if (name != '') {
+      await _user.updateProfile(displayName: name);
+    }
+
+    await _user.updateProfile(photoURL: tempURL).then((value) async {
+      await _user
+          .reload()
+          .then((value) => {imageCache!.clear()})
+          .then((value) => {imageCache!.clearLiveImages()})
+          .then((value) => {_user = FirebaseAuth.instance.currentUser!});
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      Authentication.customErrorSnackBar(
+        content: 'Saved profile',
+      ),
+    );
+
+    setState(() {
+      isSaving = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +152,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                SizedBox(width: MediaQuery.of(context).size.width/3.5,),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width / 3.5,
+                                ),
                                 Neumorphic(
                                   style: NeumorphicStyle(
                                     depth: 3,
@@ -114,23 +163,44 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     boxShape: NeumorphicBoxShape.circle(),
                                   ),
                                   padding: const EdgeInsets.all(5),
-                                  child: ClipOval(
-                                    child: widget._user.photoURL != null
-                                        ? Image.network(
-                                            widget._user.photoURL.toString(),
-                                            scale: 1,
-                                            fit: BoxFit.fitHeight,
+                                  child: SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: !isUpdating
+                                        ? ClipOval(
+                                            child: tempURL != ''
+                                                ? Image.network(
+                                                    tempURL,
+                                                    key: ValueKey(
+                                                        Random().nextInt(100)),
+                                                    scale: 1,
+                                                    fit: BoxFit.fitWidth,
+                                                  )
+                                                : Icon(
+                                                    Icons.person,
+                                                    color:
+                                                        CustomColors.darkGrey,
+                                                    size: 100,
+                                                  ),
                                           )
-                                        : Icon(
-                                            Icons.person,
-                                            color: CustomColors.darkGrey,
-                                            size: 85,
-                                          ),
+                                        : CircularProgressIndicator(),
                                   ),
                                 ),
-                                SizedBox(width: 20,),
+                                SizedBox(
+                                  width: 20,
+                                ),
+                                // File picker
                                 NeumorphicButton(
-                                  onPressed: () => {},
+                                  onPressed: () async {
+                                    File? profilePic = await Profile.pickFile();
+                                    if (profilePic != null) {
+                                      String _photoURL =
+                                          await uploadToCloudinary(profilePic);
+                                      setState(() {
+                                        tempURL = _photoURL;
+                                      });
+                                    }
+                                  },
                                   style: NeumorphicStyle(
                                     depth: 3,
                                     intensity: 1,
@@ -148,63 +218,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               ],
                             ),
                             Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          NeumorphicTextField(
-                            labelText: 'Name',
-                            icon: Icon(Icons.person_outline_rounded),
-                            controller: _nameController,
-                          ),
-                          SizedBox(height: 10),
-                          NeumorphicTextField(
-                            labelText: 'Email',
-                            icon: Icon(Icons.email),
-                            controller: _emailController,
-                          ),
-                          Button(
-                            text: 'Change Password',
-                            color: CustomColors.white,
-                            textColor: CustomColors.darkGrey,
-                            onPressed: () async {
-                              User? user;
-
-                              
-                              if (user != null) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
-                                      user: user,
-                                    ),
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  NeumorphicTextField(
+                                    labelText: 'Name',
+                                    icon: Icon(Icons.person_outline_rounded),
+                                    controller: _nameController,
                                   ),
-                                );
-                              }
-                            },
-                          ),
-                          Button(
-                            text: 'Save',
-                            color: CustomColors.primary,
-                            textColor: CustomColors.white,
-                            onPressed: () async {
-                              User? user;
-
-                              
-                              if (user != null) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
-                                      user: user,
-                                    ),
+                                  SizedBox(height: 10),
+                                  NeumorphicTextField(
+                                    labelText: 'Email',
+                                    icon: Icon(Icons.email),
+                                    controller: _emailController,
                                   ),
-                                );
-                              }
-                            },
-                          ),
-                        ],
-                      ),
-                    ),
+                                  Button(
+                                      text: 'Change Password',
+                                      color: CustomColors.white,
+                                      textColor: CustomColors.darkGrey,
+                                      onPressed: () async {
+                                        Profile.resetPassword(
+                                            context: context,
+                                            emailAddress: widget._user.email);
+                                      }),
+                                  !isSaving
+                                      ? Button(
+                                          text: 'Save',
+                                          color: CustomColors.primary,
+                                          textColor: CustomColors.white,
+                                          onPressed: () async {
+                                            User? user;
+
+                                            saveProfile(
+                                              context: context,
+                                                email:
+                                                    _emailController.value.text,
+                                                name:
+                                                    _nameController.value.text);
+
+                                            if (user != null) {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      UserInfoScreen(
+                                                    user: user,
+                                                  ),
+                                                ),
+                                              );
+                                            }
+                                          },
+                                        )
+                                      : CircularProgressIndicator(),
+                                ],
+                              ),
+                            ),
                           ],
-                          
                         ),
                       ),
                     ),

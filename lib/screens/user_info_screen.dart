@@ -82,29 +82,33 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                height: 316,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  clipBehavior: Clip.none,
-                  itemCount: groups.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: NeumorphicCard(
-                          groupName: groups[index].name,
-                          color: groups[index].color,
-                          onPressed: () => {},
-                          groupType: groups[index].type,
-                          adminNames: groups[index].admins),
-                    );
-                  },
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0,20,0,0),
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    clipBehavior: Clip.none,
+                    itemCount: groups.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: NeumorphicCard(
+                            groupName: groups[index].name,
+                            color: groups[index].color,
+                            onPressed: () => {},
+                            groupType: groups[index].type,
+                            adminNames: groups[index].admins),
+                      );
+                    },
+                  ),
                 ),
               ),
-              SizedBox(height: 20),
-              NeumorphicNoteOverview(title: 'New Notes', notes: notes, numberOfNotes: 3,),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0,30,0,30),
+                child: NeumorphicNoteOverview(title: 'New Notes', notes: notes, numberOfNotes: 3,),
+              ),
             ],
           ),
         ),
