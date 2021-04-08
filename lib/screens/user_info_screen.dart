@@ -6,7 +6,9 @@ import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/card.dart';
-import 'package:notes_app/widgets/note_panel.dart';
+import 'package:notes_app/widgets/notes/note_overview.dart';
+
+import 'notes_screen.dart';
 
 class UserInfoScreen extends StatefulWidget {
   const UserInfoScreen({Key? key, required User user})
@@ -68,7 +70,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.white,
-      bottomNavigationBar: AppBarBottom(),
+      bottomNavigationBar: AppBarBottom(buttons: List.empty()),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
@@ -97,7 +99,15 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                         child: NeumorphicCard(
                             groupName: groups[index].name,
                             color: groups[index].color,
-                            onPressed: () => {},
+                            onPressed: () => {
+                              Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => NotesScreen(
+                                      group: groups[index],
+                                    ),
+                                  ),
+                                )
+                            },
                             groupType: groups[index].type,
                             adminNames: groups[index].admins),
                       );
