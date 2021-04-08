@@ -1,19 +1,20 @@
+
 import 'package:flutter/material.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/screens/notes_screen.dart';
 
-class AppBarGroup extends StatefulWidget {
-  final Group? group;
+class AppBarNote extends StatefulWidget {
+  final Note? note;
 
-  const AppBarGroup(
-      {required this.group});
+  const AppBarNote(
+      {required this.note});
 
   @override
-  _AppBarGroupState createState() => _AppBarGroupState();
+  _AppBarNoteState createState() => _AppBarNoteState();
 }
 
-class _AppBarGroupState extends State<AppBarGroup> {
+class _AppBarNoteState extends State<AppBarNote> {
   bool isAdmin = false;
 
   void toggleAdmin() {
@@ -49,7 +50,7 @@ class _AppBarGroupState extends State<AppBarGroup> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-                widget.group != null ? widget.group!.name : "Group",
+                "Note",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: CustomColors.darkGrey,

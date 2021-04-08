@@ -4,7 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
-import 'package:notes_app/widgets/note.dart';
+import 'package:notes_app/widgets/notes/note.dart';
 
 import 'user_info_screen.dart';
 
@@ -23,11 +23,13 @@ class Note {
   String title = 'Note';
   String note = '';
   String author = 'No one';
+  DateTime timestamp = DateTime.utc(2021,03,31);
 
-  Note(String title, String note, String author) {
+  Note(String title, String body, String author, DateTime timestamp) {
     this.title = title;
-    this.note = note;
+    this.note = body;
     this.author = author;
+    this.timestamp = timestamp;
   }
 }
 
@@ -43,10 +45,10 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   List<Note> _notes = [
-    Note('Equation', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum', 'Joe'),
-    Note('Class', 'Maths', 'Test'),
-    Note('Equation', 'Lorem ipsum', 'Joe'),
-    Note('Class', 'Maths', 'Test'),
+    Note('Equation', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum', 'Joe', DateTime.utc(2021,03,31)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2021,03,31)),
+    Note('Equation', 'Lorem ipsum', 'Joe', DateTime.utc(2021,04,7)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2020,03,31)),
   ];
 
   static Widget button = NeumorphicButton(
@@ -82,26 +84,20 @@ class _NotesScreenState extends State<NotesScreen> {
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
           child: Flex(
             direction: Axis.vertical,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0,20,0,0),
-                  child: ListView.builder(
-                    clipBehavior: Clip.none,
-                    scrollDirection: Axis.vertical,
-                    itemCount: _notes.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        child: NeumorphicNote(
-                          title: _notes[index].title,
-                          note: _notes[index].note,
-                          author: _notes[index].author,
-                        ),
-                      );
-                    },
-                  ),
+                child: ListView.builder(
+                  clipBehavior: Clip.none,
+                  scrollDirection: Axis.vertical,
+                  itemCount: _notes.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      child: NeumorphicNote(
+                        note: _notes[index],
+                      ),
+                    );
+                  },
                 ),
               ),
             ],

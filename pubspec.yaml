@@ -29,6 +29,12 @@ dependencies:
   # Storing profile pictures
   cloudinary_public: ^0.8.1+1
 
+  # Timestamps
+  timeago: ^3.0.2
+
+  # Animations
+  animations: ^2.0.0
+
   # Firebase
   firebase_core: ^1.0.2
   firebase_analytics: ^8.0.0-dev.0
