@@ -59,23 +59,6 @@ class _AppBarNoteState extends State<AppBarNote> {
           ),
         ),
         SizedBox(width: 10,),
-        NeumorphicButton(
-          onPressed: () async {
-            Navigator.of(context).pop();
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: Icon(
-              Icons.arrow_back,
-              color: CustomColors.primary,
-            ),
-          ),
-        ),
       ],
     );
   }

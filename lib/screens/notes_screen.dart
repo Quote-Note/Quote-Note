@@ -23,7 +23,7 @@ class Note {
   String title = 'Note';
   String note = '';
   String author = 'No one';
-  DateTime timestamp = DateTime.utc(2021,03,31);
+  DateTime timestamp = DateTime.utc(2021, 03, 31);
 
   Note(String title, String body, String author, DateTime timestamp) {
     this.title = title;
@@ -32,7 +32,6 @@ class Note {
     this.timestamp = timestamp;
   }
 }
-
 
 class _NotesScreenState extends State<NotesScreen> {
   late Group _group;
@@ -45,10 +44,14 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   List<Note> _notes = [
-    Note('Equation', 'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum', 'Joe', DateTime.utc(2021,03,31)),
-    Note('Class', 'Maths', 'Test', DateTime.utc(2021,03,31)),
-    Note('Equation', 'Lorem ipsum', 'Joe', DateTime.utc(2021,04,7)),
-    Note('Class', 'Maths', 'Test', DateTime.utc(2020,03,31)),
+    Note(
+        'Equation',
+        'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
+        'Joe',
+        DateTime.utc(2021, 03, 31)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2021, 03, 31)),
+    Note('Equation', 'Lorem ipsum', 'Joe', DateTime.utc(2021, 04, 7)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2020, 03, 31)),
   ];
 
   static Widget button = NeumorphicButton(
@@ -61,13 +64,29 @@ class _NotesScreenState extends State<NotesScreen> {
     child: Icon(Icons.add),
   );
 
-  final List<Widget> bottomAppBarButtons = [button];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustomColors.white,
-      bottomNavigationBar: AppBarBottom(buttons: bottomAppBarButtons),
+      bottomNavigationBar: AppBarBottom(buttons: [
+        button,
+        NeumorphicButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.arrow_back,
+              color: CustomColors.primary,
+            ),
+          ),
+        ),
+      ]),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(

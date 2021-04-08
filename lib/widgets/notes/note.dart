@@ -30,6 +30,7 @@ class _NeumorphicNoteState extends State<NeumorphicNote> {
           child: OpenContainer(
               clipBehavior: Clip.none,
               closedElevation: 0,
+              transitionType: ContainerTransitionType.fadeThrough,
               closedColor: CustomColors.white,
               openColor: CustomColors.white,
               openBuilder: (context, action) {
