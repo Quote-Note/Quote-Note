@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class AppBarBottom extends StatefulWidget {
@@ -14,6 +13,7 @@ class AppBarBottom extends StatefulWidget {
 class _AppBarBottomState extends State<AppBarBottom> {
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -25,7 +25,7 @@ class _AppBarBottomState extends State<AppBarBottom> {
                 depth: -2,
                 intensity: 1,
                 boxShape: NeumorphicBoxShape.rect(),
-                color: CustomColors.white,
+                color: theme.baseColor,
               ),
               padding: const EdgeInsets.all(5),
               child: Center(

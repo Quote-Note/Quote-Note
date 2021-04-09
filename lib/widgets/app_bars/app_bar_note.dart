@@ -25,6 +25,7 @@ class _AppBarNoteState extends State<AppBarNote> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Row(
       children: [
         Neumorphic(
@@ -53,7 +54,7 @@ class _AppBarNoteState extends State<AppBarNote> {
                 "Note",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: CustomColors.darkGrey,
+                  color: theme.defaultTextColor,
                 )
                 ),
           ),

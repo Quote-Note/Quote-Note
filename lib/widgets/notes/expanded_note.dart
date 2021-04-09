@@ -14,13 +14,14 @@ class ExpandedNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: theme.baseColor,
           title: AppBarNote(note: note),
         ),
       ),
@@ -64,7 +65,7 @@ class ExpandedNote extends StatelessWidget {
                         child: Container(
                           height: MediaQuery.of(context).size.height,
                           decoration: BoxDecoration(
-                            color: CustomColors.white,
+                            color: theme.baseColor,
                           ),
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -77,7 +78,7 @@ class ExpandedNote extends StatelessWidget {
                                 Text(
                                   note.title,
                                   style: TextStyle(
-                                    color: CustomColors.darkGrey,
+                                    color: theme.defaultTextColor,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 24,
                                   ),
@@ -91,7 +92,7 @@ class ExpandedNote extends StatelessWidget {
                                     Text(
                                       note.author,
                                       style: TextStyle(
-                                        color: CustomColors.lightGrey,
+                                        color: theme.variantColor,
                                         fontSize: 14,
                                       ),
                                     ),
@@ -101,7 +102,7 @@ class ExpandedNote extends StatelessWidget {
                                       child: Text(
                                         '• ${timeago.format(note.timestamp, locale: 'en_short')}',
                                         style: TextStyle(
-                                          color: CustomColors.lightGrey,
+                                          color: theme.variantColor,
                                           fontSize: 14,
                                         ),
                                       ),
@@ -117,7 +118,7 @@ class ExpandedNote extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 10,
                                   style: TextStyle(
-                                      color: CustomColors.darkGrey,
+                                      color: theme.defaultTextColor,
                                       height: 1.5),
                                 ),
                               ],

@@ -37,9 +37,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.white,
+      backgroundColor: theme.baseColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -64,7 +65,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     Text(
                       'Quote Note',
                       style: TextStyle(
-                        color: CustomColors.darkGrey,
+                        color: theme.defaultTextColor,
                         fontSize: 40,
                         fontWeight: FontWeight.bold,
                       ),
@@ -77,20 +78,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           NeumorphicTextField(
                             labelText: 'Email',
-                            icon: Icon(Icons.email),
+                            icon: Icon(Icons.email, color: theme.variantColor),
                             controller: _emailController,
                           ),
                           SizedBox(height: 10),
                           NeumorphicTextField(
                             labelText: 'Password',
-                            icon: Icon(Icons.lock_rounded),
+                            icon: Icon(Icons.lock_rounded, color: theme.variantColor,),
                             password: true,
                             controller: _passwordController,
                           ),
                           Button(
                             text: 'Create account',
                             color: CustomColors.primary,
-                            textColor: CustomColors.white,
+                            textColor: CustomColors.bg,
                             onPressed: () async {
                               User? user;
 
@@ -114,8 +115,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           Button(
                             text: 'Already have an account? Log in!',
-                            color: CustomColors.white,
-                            textColor: CustomColors.darkGrey,
+                            color: theme.baseColor,
+                            textColor: theme.defaultTextColor,
                             onPressed: () => {
                               Navigator.of(context)
                                   .pushReplacement(_routeToSignInScreen())

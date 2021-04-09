@@ -18,7 +18,7 @@ class JoinGroupCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: NeumorphicCard(
           groupName: 'Join Group',
-          color: Colors.deepOrange,
+          color: CustomColors.orange,
           groupType: '',
           adminNames: [],
           onPressed: () {
@@ -32,7 +32,7 @@ class JoinGroupCard extends StatelessWidget {
           },
           icon: Icon(
             Icons.group_add,
-            color: CustomColors.white,
+            color: Colors.white,
             size: 50,
           )),
     );

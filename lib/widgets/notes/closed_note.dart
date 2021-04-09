@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/screens/notes_screen.dart';
@@ -15,10 +14,10 @@ class ClosedNote extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Neumorphic(
       style: NeumorphicStyle(
-        boxShape:
-            NeumorphicBoxShape.roundRect(BorderRadius.circular(30)),
+        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(30)),
         depth: 4,
         intensity: 1,
       ),
@@ -33,7 +32,7 @@ class ClosedNote extends StatelessWidget {
               Text(
                 note.title,
                 style: TextStyle(
-                  color: CustomColors.darkGrey,
+                  color: theme.defaultTextColor,
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
                 ),
@@ -43,7 +42,7 @@ class ClosedNote extends StatelessWidget {
                 child: Text(
                   note.author,
                   style: TextStyle(
-                    color: CustomColors.darkGrey,
+                    color: theme.defaultTextColor,
                     fontSize: 16,
                   ),
                 ),
@@ -53,7 +52,7 @@ class ClosedNote extends StatelessWidget {
                 child: Text(
                   '• ${timeago.format(note.timestamp, locale: 'en_short')}',
                   style: TextStyle(
-                    color: CustomColors.lightGrey,
+                    color: theme.variantColor,
                     fontSize: 16,
                   ),
                 ),
@@ -73,7 +72,7 @@ class ClosedNote extends StatelessWidget {
                 textAlign: TextAlign.justify,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: CustomColors.lightGrey,
+                  color: theme.variantColor,
                 ),
               ),
             ),

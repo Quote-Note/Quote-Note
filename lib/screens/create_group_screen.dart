@@ -29,14 +29,15 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: Colors.transparent,
           title: AppBarTitle(
             user: widget._user,
           ),
@@ -79,7 +80,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 alignment: Alignment.centerRight,
                                 child: NeumorphicButton(
                                     style: NeumorphicStyle(
-                                      color: CustomColors.white,
+                                      color: theme.baseColor,
                                       boxShape: NeumorphicBoxShape.circle(),
                                       depth: 5,
                                       intensity: 0,
@@ -107,7 +108,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
                                           labelText: 'Enter group title',
-                                          icon: Icon(Icons.description),
+                                          icon: Icon(Icons.description, color: theme.variantColor,),
                                           controller: _nameController),
                                     ),
                                     Padding(
@@ -115,7 +116,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
                                           labelText: 'Invite members via email',
-                                          icon: Icon(Icons.email),
+                                          icon: Icon(Icons.email, color: theme.variantColor),
                                           controller: _emailController),
                                     ),
                                   ],
@@ -148,7 +149,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               Button(
                                 text: 'Create group',
                                 color: CustomColors.primary,
-                                textColor: CustomColors.white,
+                                textColor: CustomColors.bg,
                                 onPressed: () async {},
                               ),
                             ],
@@ -174,6 +175,7 @@ class Member extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
       child: Row(
@@ -181,7 +183,7 @@ class Member extends StatelessWidget {
         children: [
           Text(
             'test@gmail.com',
-            style: TextStyle(color: CustomColors.lightGrey),
+            style: TextStyle(color: theme.variantColor),
           ),
           NeumorphicButton(
             padding: EdgeInsets.all(10),
@@ -194,7 +196,7 @@ class Member extends StatelessWidget {
             child: ClipOval(
               child: Icon(
                 Icons.star,
-                color: CustomColors.lightGrey,
+                color: theme.variantColor,
                 size: 15,
               ),
             ),

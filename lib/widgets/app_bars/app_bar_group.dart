@@ -24,6 +24,7 @@ class _AppBarGroupState extends State<AppBarGroup> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Row(
       children: [
         Neumorphic(
@@ -52,7 +53,7 @@ class _AppBarGroupState extends State<AppBarGroup> {
                 widget.group != null ? widget.group!.name : "Group",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: CustomColors.darkGrey,
+                  color: theme.defaultTextColor,
                 )
                 ),
           ),

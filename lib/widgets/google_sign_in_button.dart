@@ -15,6 +15,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
@@ -23,7 +24,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
             )
           : NeumorphicButton(
               style: NeumorphicStyle(
-                color: CustomColors.white,
+                color: theme.baseColor,
                 depth: 3,
                 intensity: 1,
                 shape: NeumorphicShape.flat,

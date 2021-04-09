@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/res/custom_colors.dart';
 
 class NeumorphicCard extends StatefulWidget {
   final String groupName;
@@ -77,6 +76,7 @@ class CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Flex(
       direction: Axis.vertical,
       children: <Widget>[
@@ -92,7 +92,7 @@ class CardContent extends StatelessWidget {
           child: Container(
             width: 282,
             decoration: BoxDecoration(
-              color: CustomColors.white,
+              color: theme.baseColor,
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -104,7 +104,7 @@ class CardContent extends StatelessWidget {
                   Text(
                     groupName,
                     style: TextStyle(
-                      color: CustomColors.darkGrey,
+                      color: theme.defaultTextColor,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
@@ -113,7 +113,7 @@ class CardContent extends StatelessWidget {
                     adminNames.join(' & '),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
-                      color: CustomColors.lightGrey,
+                      color: theme.variantColor,
                     ),
                   ),
                   SizedBox(height: 30),
