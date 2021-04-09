@@ -27,14 +27,15 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(50.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: Colors.transparent,
           title: AppBarTitle(
             user: widget._user,
           ),
@@ -68,7 +69,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                         flex: 1,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.deepOrange,
+                            color: CustomColors.primary,
                           ),
                         ),
                       ),
@@ -92,7 +93,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                                             vertical: 8.0),
                                         child: NeumorphicTextField(
                                             labelText: 'Enter a group code',
-                                            icon: Icon(Icons.description),
+                                            icon: Icon(Icons.description, color: theme.variantColor),
                                             controller: _codeController),
                                       ),
                                     ],
@@ -119,7 +120,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                                           Text(
                                             'Maths - G3452',
                                             style: TextStyle(
-                                                color: CustomColors.lightGrey),
+                                                color: theme.variantColor),
                                           ),
                                           NeumorphicButton(
                                             padding: EdgeInsets.all(10),
@@ -133,7 +134,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                                             child: ClipOval(
                                               child: Icon(
                                                 Icons.login,
-                                                color: CustomColors.lightGrey,
+                                                color: theme.variantColor,
                                                 size: 15,
                                               ),
                                             ),
@@ -148,7 +149,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                                 child: Button(
                                   text: 'Join group',
                                   color: CustomColors.primary,
-                                  textColor: CustomColors.white,
+                                  textColor: CustomColors.bg,
                                   onPressed: () async {},
                                 ),
                               ),

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/res/custom_colors.dart';
 
 class NeumorphicNoteOverview extends StatefulWidget {
   final String title;
@@ -21,6 +20,7 @@ class NeumorphicNoteOverview extends StatefulWidget {
 class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return SizedBox(
                 height: 174,
                 width: 343,
@@ -38,7 +38,7 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
                       Text(
                         widget.title,
                         style: TextStyle(
-                          color: CustomColors.darkGrey,
+                          color: theme.defaultTextColor,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -60,7 +60,7 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
                                   widget.notes[index],
                                   overflow: TextOverflow.ellipsis,
                                   style: TextStyle(
-                                    color: CustomColors.lightGrey,
+                                    color: theme.variantColor,
                                   ),
                                 ),
                               );

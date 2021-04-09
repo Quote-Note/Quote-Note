@@ -47,12 +47,14 @@ class _AppBarTitleState extends State<AppBarTitle> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Row(
       children: [
         Neumorphic(
           style: NeumorphicStyle(
             depth: -1,
             intensity: 1,
+            color: theme.baseColor,
             boxShape: NeumorphicBoxShape.circle(),
           ),
           padding: const EdgeInsets.all(5),
@@ -68,7 +70,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                     )
                   : Icon(
                       Icons.person,
-                      color: CustomColors.darkGrey,
+                      color: theme.defaultTextColor,
                       size: 30,
                     ),
             ),
@@ -84,7 +86,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
                         0, widget.user!.email.toString().indexOf('@')))!,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                  color: CustomColors.darkGrey,
+                  color: theme.defaultTextColor,
                 )),
           ),
         ),
@@ -101,9 +103,9 @@ class _AppBarTitleState extends State<AppBarTitle> {
           padding: const EdgeInsets.all(5),
           child: ClipOval(
             child: isAdmin
-                ? Icon(Icons.star, color: CustomColors.yellow)
+                ? Icon(Icons.star, color: Colors.yellow[400])
                 : Icon(Icons.star_border_outlined,
-                    color: CustomColors.darkGrey),
+                    color: theme.defaultTextColor),
           ),
         ),
         SizedBox(
@@ -123,7 +125,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
           child: ClipOval(
             child: Icon(
               Icons.edit,
-              color: CustomColors.darkGrey,
+              color: theme.defaultTextColor,
             ),
           ),
         ),

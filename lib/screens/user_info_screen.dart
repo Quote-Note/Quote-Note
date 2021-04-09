@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -51,16 +50,16 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   //Dummy data
   List<Group> groups = [
-    Group('Class', 'Maths', CustomColors.yellow, [
-      "Mr Grabski",
+    Group('Class', 'Maths', CustomColors.yellow,
+      ["Mr Grabski",
       "Mr Pegg",
       "Miss Collins",
       "Miss Collins",
       "Miss Collins"
     ]),
-    Group('Class', 'English', Colors.red,
+    Group('Class', 'English', CustomColors.red,
         ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"]),
-    Group('Staff', 'Announcements', Colors.teal, ["Mr Grabski"]),
+    Group('Staff', 'Announcements', CustomColors.lime, ["Mr Grabski"]),
   ];
 
   List<String> notes = [
@@ -72,16 +71,17 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.white,
+      backgroundColor: theme.baseColor,
       bottomNavigationBar: AppBarBottom(buttons: List.empty()),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: Colors.transparent,
           title: AppBarTitle(
             user: _user,
           ),

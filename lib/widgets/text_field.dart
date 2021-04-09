@@ -33,7 +33,7 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: TextFormField(
           controller: widget.controller,
-          style: TextStyle(color: CustomColors.lightGrey),
+          style: TextStyle(color: CustomColors.bodyText),
           decoration: InputDecoration(
             icon: widget.icon,
             border: InputBorder.none,

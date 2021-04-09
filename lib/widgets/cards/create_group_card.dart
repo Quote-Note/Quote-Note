@@ -18,7 +18,7 @@ class CreateGroupCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10),
       child: NeumorphicCard(
           groupName: 'Create Group',
-          color: Colors.deepPurple,
+          color: CustomColors.lavender,
           groupType: '',
           adminNames: [],
           onPressed: () {
@@ -32,7 +32,7 @@ class CreateGroupCard extends StatelessWidget {
           },
           icon: Icon(
             Icons.add_circle,
-            color: CustomColors.white,
+            color: Colors.white,
             size: 50,
           )),
     );

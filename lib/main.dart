@@ -22,34 +22,47 @@ class RemoveGlow extends ScrollBehavior {
   }
 }
 
+final NeumorphicThemeData lightTheme = NeumorphicThemeData(
+        baseColor: CustomColors.bg,
+        accentColor: CustomColors.bodyText,
+        shadowDarkColor: CustomColors.darkShadow,
+        shadowLightColor: CustomColors.lightShadow,
+        shadowDarkColorEmboss: CustomColors.darkShadow,
+        shadowLightColorEmboss: CustomColors.lightShadow,
+        defaultTextColor: CustomColors.headerText,
+        variantColor: CustomColors.bodyText,
+        lightSource: LightSource.topLeft,
+        depth: 10,
+      );
+
+final NeumorphicThemeData darkTheme = NeumorphicThemeData(
+        baseColor: CustomColors.nightBG,
+        accentColor: CustomColors.nightBodyText,
+        shadowDarkColor: CustomColors.nightDarkShadow,
+        shadowLightColor: CustomColors.nightLightShadow,
+        shadowDarkColorEmboss: CustomColors.nightDarkShadow,
+        shadowLightColorEmboss: CustomColors.nightLightShadow,
+        defaultTextColor: CustomColors.nightHeaderText,
+        variantColor: CustomColors.nightBodyText,
+        lightSource: LightSource.topLeft,
+        depth: 10,
+      );
+
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return NeumorphicApp(
       title: 'QuoteNote',
       debugShowCheckedModeBanner: false,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       builder: (context, child) {
         return ScrollConfiguration(
           behavior: RemoveGlow(),
           child: child!,
         );
       },
-      theme: NeumorphicThemeData(
-        baseColor: CustomColors.white,
-        accentColor: CustomColors.lightGrey,
-        shadowDarkColor: CustomColors.darkShadow,
-        shadowLightColor: CustomColors.lightShadow,
-        shadowDarkColorEmboss: CustomColors.darkShadow,
-        shadowLightColorEmboss: CustomColors.lightShadow,
-        lightSource: LightSource.topLeft,
-        depth: 10,
-      ),
-      darkTheme: NeumorphicThemeData(
-        baseColor: Color(0xFF3E3E3E),
-        lightSource: LightSource.topLeft,
-        depth: 6,
-      ),
+      theme: lightTheme,
+      darkTheme: darkTheme,
       home: SignUpScreen(),
     );
   }

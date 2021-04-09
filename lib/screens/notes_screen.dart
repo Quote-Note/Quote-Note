@@ -54,22 +54,21 @@ class _NotesScreenState extends State<NotesScreen> {
     Note('Class', 'Maths', 'Test', DateTime.utc(2020, 03, 31)),
   ];
 
-  static Widget button = NeumorphicButton(
+  @override
+  Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
+    return Scaffold(
+      backgroundColor: theme.baseColor,
+      bottomNavigationBar: AppBarBottom(buttons: [
+        NeumorphicButton(
     style: NeumorphicStyle(
       boxShape: NeumorphicBoxShape.circle(),
       depth: 3,
       intensity: 1,
     ),
     onPressed: () {},
-    child: Icon(Icons.add),
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: CustomColors.white,
-      bottomNavigationBar: AppBarBottom(buttons: [
-        button,
+    child: Icon(Icons.add, color: theme.defaultTextColor,),
+  ),
         NeumorphicButton(
           onPressed: () async {
             Navigator.of(context).pop();
@@ -88,11 +87,11 @@ class _NotesScreenState extends State<NotesScreen> {
         ),
       ]),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: Colors.transparent,
           title: AppBarGroup(
             group: _group,
           ),

@@ -105,9 +105,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: CustomColors.white,
+      backgroundColor: theme.baseColor,
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
           onPressed: () async {
@@ -133,11 +134,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ]),
       appBar: PreferredSize(
-        preferredSize: Size.fromHeight(70.0),
+        preferredSize: Size.fromHeight(60.0),
         child: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
-          backgroundColor: CustomColors.white,
+          backgroundColor: Colors.transparent,
           title: AppBarProfile(
             user: _user,
           ),
@@ -170,21 +171,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: MediaQuery.of(context).size.height - 240,
                       width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: CustomColors.white,
-                      ),
+                      decoration: BoxDecoration(color: theme.baseColor),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 20.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
+                                NeumorphicButton(
+                                  onPressed: () {
+                                    NeumorphicTheme.of(context)!.themeMode = NeumorphicTheme.of(context)!.isUsingDark ? ThemeMode.light : ThemeMode.dark;
+                                  },
+                                  style: NeumorphicStyle(
+                                    depth: 3,
+                                    intensity: 1,
+                                    boxShape: NeumorphicBoxShape.circle(),
+                                  ),
+                                  padding: const EdgeInsets.all(10),
+                                  child: ClipOval(
+                                    child: Icon(
+                                      Icons.brightness_medium,
+                                      color: theme.defaultTextColor,
+                                      size: 25,
+                                    ),
+                                  ),
+                                ),
                                 SizedBox(
-                                  width:
-                                      MediaQuery.of(context).size.width / 3.5,
+                                  width: 20,
                                 ),
                                 Neumorphic(
                                   style: NeumorphicStyle(
@@ -209,7 +225,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 : Icon(
                                                     Icons.person,
                                                     color:
-                                                        CustomColors.darkGrey,
+                                                        theme.defaultTextColor,
                                                     size: 100,
                                                   ),
                                           )
@@ -240,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   child: ClipOval(
                                     child: Icon(
                                       Icons.edit,
-                                      color: CustomColors.darkGrey,
+                                      color: theme.defaultTextColor,
                                       size: 25,
                                     ),
                                   ),
@@ -253,19 +269,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   NeumorphicTextField(
                                     labelText: 'Name',
-                                    icon: Icon(Icons.person_outline_rounded),
+                                    icon: Icon(Icons.person_outline_rounded,
+                                        color: theme.variantColor),
                                     controller: _nameController,
                                   ),
                                   SizedBox(height: 10),
                                   NeumorphicTextField(
                                     labelText: 'Email',
-                                    icon: Icon(Icons.email),
+                                    icon: Icon(Icons.email,
+                                        color: theme.variantColor),
                                     controller: _emailController,
                                   ),
                                   Button(
                                       text: 'Change Password',
-                                      color: CustomColors.white,
-                                      textColor: CustomColors.darkGrey,
+                                      color: theme.baseColor,
+                                      textColor: theme.defaultTextColor,
                                       onPressed: () async {
                                         Profile.resetPassword(
                                             context: context,
@@ -275,7 +293,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       ? Button(
                                           text: 'Save',
                                           color: CustomColors.primary,
-                                          textColor: CustomColors.white,
+                                          textColor: CustomColors.bg,
                                           onPressed: () async {
                                             User? user;
 
