@@ -82,23 +82,6 @@ class _AppBarProfileState extends State<AppBarProfile> {
           ),
         ),
         SizedBox(width: 10,),
-        NeumorphicButton(
-          onPressed: () async {
-            Navigator.of(context).pushReplacement(_routeTo(UserInfoScreen(user: widget.user!)));
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: Icon(
-              Icons.arrow_back,
-              color: CustomColors.primary,
-            ),
-          ),
-        ),
       ],
     );
   }

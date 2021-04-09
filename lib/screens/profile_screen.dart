@@ -63,7 +63,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return returnResult;
   }
 
-  void saveProfile({required BuildContext context, String email = '', String name = ''}) async {
+  void saveProfile(
+      {required BuildContext context,
+      String email = '',
+      String name = ''}) async {
     setState(() {
       isSaving = true;
     });
@@ -105,10 +108,34 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: CustomColors.white,
-      bottomNavigationBar: AppBarBottom(buttons: List.empty()),
+      bottomNavigationBar: AppBarBottom(buttons: [
+        NeumorphicButton(
+          onPressed: () async {
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(
+                builder: (context) => UserInfoScreen(
+                  user: _user,
+                ),
+              ),
+            );
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.arrow_back,
+              color: CustomColors.primary,
+            ),
+          ),
+        ),
+      ]),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: CustomColors.white,
           title: AppBarProfile(
@@ -253,7 +280,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             User? user;
 
                                             saveProfile(
-                                              context: context,
+                                                context: context,
                                                 email:
                                                     _emailController.value.text,
                                                 name:

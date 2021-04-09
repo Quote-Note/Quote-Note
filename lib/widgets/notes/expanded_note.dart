@@ -25,7 +25,22 @@ class ExpandedNote extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: AppBarBottom(
-        buttons: [],
+        buttons: [NeumorphicButton(
+          onPressed: () async {
+            Navigator.of(context).pop();
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.arrow_back,
+              color: CustomColors.primary,
+            ),
+          ),
+        ),],
       ),
       body: SafeArea(
         child: Padding(

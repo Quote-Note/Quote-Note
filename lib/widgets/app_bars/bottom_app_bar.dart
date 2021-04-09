@@ -28,20 +28,28 @@ class _AppBarBottomState extends State<AppBarBottom> {
                 color: CustomColors.white,
               ),
               padding: const EdgeInsets.all(5),
-              child: ListView.builder(
-                scrollDirection: Axis.vertical,
-                itemCount: widget.buttons.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: EdgeInsets.symmetric(vertical: 3),
-                    child: Expanded(
-                      child: Center(
-                          child: widget.buttons.length > 0
-                              ? widget.buttons[index]
-                              : Container()),
-                    ),
-                  );
-                },
+              child: Center(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: widget.buttons.length,
+                  shrinkWrap: true,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 3),
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: widget.buttons.length > 0
+                                  ? widget.buttons[index]
+                                  : Container(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
