@@ -32,17 +32,17 @@ class _AppBarBottomState extends State<AppBarBottom> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
                   itemCount: widget.buttons.length,
+                  shrinkWrap: true,
                   itemBuilder: (BuildContext context, int index) {
                     return Center(
                       child: Padding(
                         padding: EdgeInsets.symmetric(vertical: 3),
-                        child: Row(
+                        child: Column(
                           children: [
                             Expanded(
-                              child: Center(
-                                  child: widget.buttons.length > 0
-                                      ? widget.buttons[index]
-                                      : Container()),
+                              child: widget.buttons.length > 0
+                                  ? widget.buttons[index]
+                                  : Container(),
                             ),
                           ],
                         ),

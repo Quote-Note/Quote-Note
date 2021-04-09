@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/text_field.dart';
@@ -25,8 +24,7 @@ class JoinGroupExpanded extends StatefulWidget {
 
 class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _codeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +91,7 @@ class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
                                       child: NeumorphicTextField(
                                           labelText: 'Enter a group code',
                                           icon: Icon(Icons.description),
-                                          controller: _nameController),
+                                          controller: _codeController),
                                     ),
                                   ],
                                 ),

@@ -122,6 +122,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           transitionType: ContainerTransitionType.fadeThrough,
                           clipBehavior: Clip.none,
                           closedElevation: 0,
+                          openElevation: 0,
                           closedColor: CustomColors.white,
                           openColor: CustomColors.white,
                           openBuilder: (context, action) {
@@ -135,6 +136,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                           transitionType: ContainerTransitionType.fadeThrough,
                           clipBehavior: Clip.none,
                           closedElevation: 0,
+                          openElevation: 0,
                           closedColor: CustomColors.white,
                           openColor: CustomColors.white,
                           openBuilder: (context, action) {
