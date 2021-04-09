@@ -8,7 +8,7 @@ import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-import 'button.dart';
+import '../button.dart';
 
 class CreateGroupExpanded extends StatefulWidget {
   const CreateGroupExpanded({

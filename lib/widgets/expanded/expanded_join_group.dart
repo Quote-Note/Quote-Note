@@ -8,7 +8,7 @@ import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-import 'button.dart';
+import '../button.dart';
 
 class JoinGroupExpanded extends StatefulWidget {
   const JoinGroupExpanded({
@@ -123,7 +123,7 @@ class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
                               ),
                               SizedBox(height: 8),
                               Button(
-                                text: 'Create group',
+                                text: 'Join group',
                                 color: CustomColors.primary,
                                 textColor: CustomColors.white,
                                 onPressed: () async {},
