@@ -6,11 +6,10 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
-import 'package:notes_app/widgets/card.dart';
-import 'package:notes_app/widgets/closed/closed_create_group.dart';
-import 'package:notes_app/widgets/closed/closed_join_group.dart';
-import 'package:notes_app/widgets/expanded/expanded_create_group.dart';
-import 'package:notes_app/widgets/expanded/expanded_join_group.dart';
+import 'package:notes_app/widgets/cards/card.dart';
+import 'package:notes_app/widgets/cards/create_group_card.dart';
+import 'package:notes_app/widgets/cards/join_group_card.dart';
+
 import 'package:notes_app/widgets/notes/note_overview.dart';
 
 import 'notes_screen.dart';
@@ -80,6 +79,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(70.0),
         child: AppBar(
+          automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: CustomColors.white,
           title: AppBarTitle(
@@ -118,33 +118,9 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
                             adminNames: groups[index].admins),
                       );
                     } else if (index == groups.length + 1) {
-                      return OpenContainer(
-                          transitionType: ContainerTransitionType.fadeThrough,
-                          clipBehavior: Clip.none,
-                          closedElevation: 0,
-                          openElevation: 0,
-                          closedColor: CustomColors.white,
-                          openColor: CustomColors.white,
-                          openBuilder: (context, action) {
-                            return CreateGroupExpanded(user: _user);
-                          },
-                          closedBuilder: (context, action) {
-                            return CreateGroupClosed();
-                          });
+                      return CreateGroupCard();
                     } else {
-                      return OpenContainer(
-                          transitionType: ContainerTransitionType.fadeThrough,
-                          clipBehavior: Clip.none,
-                          closedElevation: 0,
-                          openElevation: 0,
-                          closedColor: CustomColors.white,
-                          openColor: CustomColors.white,
-                          openBuilder: (context, action) {
-                            return JoinGroupExpanded(user: _user);
-                          },
-                          closedBuilder: (context, action) {
-                            return JoinGroupClosed();
-                          });
+                      return JoinGroupCard();
                     }
                   },
                 ),

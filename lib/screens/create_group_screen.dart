@@ -5,12 +5,12 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
+import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-import '../button.dart';
 
-class JoinGroupExpanded extends StatefulWidget {
-  const JoinGroupExpanded({
+class CreateGroupScreen extends StatefulWidget {
+  const CreateGroupScreen({
     Key? key,
     required User user,
   })   : _user = user,
@@ -19,12 +19,13 @@ class JoinGroupExpanded extends StatefulWidget {
   final User _user;
 
   @override
-  _JoinGroupExpandedState createState() => _JoinGroupExpandedState();
+  _CreateGroupScreenState createState() => _CreateGroupScreenState();
 }
 
-class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
+class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _codeController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -68,10 +69,26 @@ class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
                       Expanded(
                         flex: 1,
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.deepOrange,
-                          ),
-                        ),
+                            decoration: BoxDecoration(
+                              color: CustomColors.primary,
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 40.0),
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: NeumorphicButton(
+                                    style: NeumorphicStyle(
+                                      color: CustomColors.white,
+                                      boxShape: NeumorphicBoxShape.circle(),
+                                      depth: 5,
+                                      intensity: 0,
+                                    ),
+                                    onPressed: () {},
+                                    child: Icon(Icons.edit,
+                                        color: CustomColors.primary)),
+                              ),
+                            )),
                       ),
                       Expanded(
                         flex: 9,
@@ -89,9 +106,17 @@ class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
-                                          labelText: 'Enter a group code',
+                                          labelText: 'Enter group title',
                                           icon: Icon(Icons.description),
-                                          controller: _codeController),
+                                          controller: _nameController),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8.0),
+                                      child: NeumorphicTextField(
+                                          labelText: 'Invite members via email',
+                                          icon: Icon(Icons.email),
+                                          controller: _emailController),
                                     ),
                                   ],
                                 ),
@@ -121,7 +146,7 @@ class _JoinGroupExpandedState extends State<JoinGroupExpanded> {
                               ),
                               SizedBox(height: 8),
                               Button(
-                                text: 'Join group',
+                                text: 'Create group',
                                 color: CustomColors.primary,
                                 textColor: CustomColors.white,
                                 onPressed: () async {},

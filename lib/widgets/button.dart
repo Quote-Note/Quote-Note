@@ -23,7 +23,7 @@ class _ButtonState extends State<Button> {
       width: double.infinity,
       child: NeumorphicButton(
         onPressed: widget.onPressed,
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(vertical: 20),
         child: Text(
           widget.text,
           style: TextStyle(color: widget.textColor, fontSize: 16),
@@ -35,7 +35,7 @@ class _ButtonState extends State<Button> {
           shape: NeumorphicShape.flat,
           intensity: 1,
         ),
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(vertical: 10),
       ),
     );
   }
