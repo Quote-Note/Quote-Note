@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/screens/notes_screen.dart';

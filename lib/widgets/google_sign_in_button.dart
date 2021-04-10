@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/user_info_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 
