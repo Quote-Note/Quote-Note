@@ -1,11 +1,11 @@
-import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/screens/group_screen.dart';
 import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/google_sign_in_button.dart';
 import 'package:notes_app/widgets/text_field.dart';
@@ -13,21 +13,6 @@ import 'package:notes_app/widgets/text_field.dart';
 class SignUpScreen extends StatefulWidget {
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
-}
-
-Route _routeToSignInScreen() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SignInScreen(),
-    transitionDuration: Duration(milliseconds:500),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return SharedAxisTransition(
-        animation: animation,
-        secondaryAnimation: secondaryAnimation,
-        transitionType: SharedAxisTransitionType.horizontal,
-        child: child,
-      );
-    },
-  );
 }
 
 class _SignUpScreenState extends State<SignUpScreen> {
@@ -105,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               if (user != null) {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
+                                    builder: (context) => GroupScreen(
                                       user: user!,
                                     ),
                                   ),
@@ -119,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             textColor: theme.defaultTextColor,
                             onPressed: () => {
                               Navigator.of(context)
-                                  .pushReplacement(_routeToSignInScreen())
+                                  .pushReplacement(Routes.routeTo(SignInScreen()))
                             },
                           ),
                         ],

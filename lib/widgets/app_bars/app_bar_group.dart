@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/res/custom_colors.dart';
+import 'package:notes_app/screens/group_screen.dart';
 
 class AppBarGroup extends StatefulWidget {
   final Group? group;
@@ -40,7 +41,8 @@ class _AppBarGroupState extends State<AppBarGroup> {
               child: Container(
                 height: 40,
                 width: 40,
-                color: theme.disabledColor,
+                color: widget.group!.color,
+                child: Icon(Icons.group, color: CustomColors.nightBG,),
             ),
           ),
         ),

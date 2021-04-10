@@ -41,7 +41,8 @@ class _AppBarNoteState extends State<AppBarNote> {
               child: Container(
                 height: 40,
                 width: 40,
-                color: theme.disabledColor
+                color: theme.disabledColor,
+                child: Icon(Icons.article_rounded, color: theme.baseColor),
             ),
           ),
         ),
@@ -50,7 +51,7 @@ class _AppBarNoteState extends State<AppBarNote> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
-                "Note",
+                widget.note!.title,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   color: theme.defaultTextColor,

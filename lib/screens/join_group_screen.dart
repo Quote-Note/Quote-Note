@@ -34,6 +34,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,

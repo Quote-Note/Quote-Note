@@ -3,9 +3,6 @@ import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/screens/profile_screen.dart';
-import 'package:notes_app/screens/sign_in_screen.dart';
-import 'package:notes_app/utils/auth.dart';
 
 class AppBarTitle extends StatefulWidget {
   final User? user;
@@ -18,25 +15,6 @@ class AppBarTitle extends StatefulWidget {
 
 class _AppBarTitleState extends State<AppBarTitle> {
   bool isAdmin = false;
-
-  Route _routeTo(Widget location) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => location,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset.zero;
-        var curve = Curves.ease;
-
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
 
   void toggleAdmin() {
     setState(() {
@@ -109,47 +87,6 @@ class _AppBarTitleState extends State<AppBarTitle> {
         ),
         SizedBox(
           width: 10,
-        ),
-        NeumorphicButton(
-          onPressed: () => {
-            Navigator.of(context)
-                .pushReplacement(_routeTo(ProfileScreen(user: widget.user!)))
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: Icon(
-              Icons.edit,
-              color: theme.defaultTextColor,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
-        NeumorphicButton(
-          onPressed: () async {
-            setState(() {});
-            await Authentication.signOut(context: context);
-            setState(() {});
-            Navigator.of(context).pushReplacement(_routeTo(SignInScreen()));
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: Icon(
-              Icons.logout,
-              color: theme.disabledColor,
-            ),
-          ),
         ),
       ],
     );
