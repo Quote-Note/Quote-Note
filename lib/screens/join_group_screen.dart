@@ -29,6 +29,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
+      backgroundColor: theme.baseColor,
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -43,7 +44,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
       ),
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
-          child: Icon(Icons.arrow_back, color: CustomColors.primary),
+          child: Icon(Icons.arrow_back, color: theme.disabledColor),
           onPressed: () => {Navigator.of(context).pop()},
           style: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
         )
@@ -69,7 +70,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                         flex: 1,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: CustomColors.primary,
+                            color: theme.disabledColor,
                           ),
                         ),
                       ),
@@ -148,7 +149,7 @@ class _JoinGroupScreenState extends State<JoinGroupScreen> {
                                 flex: 0,
                                 child: Button(
                                   text: 'Join group',
-                                  color: CustomColors.primary,
+                                  color: theme.disabledColor,
                                   textColor: CustomColors.bg,
                                   onPressed: () async {},
                                 ),

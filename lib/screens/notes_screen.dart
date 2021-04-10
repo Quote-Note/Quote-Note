@@ -81,7 +81,7 @@ class _NotesScreenState extends State<NotesScreen> {
           child: ClipOval(
             child: Icon(
               Icons.arrow_back,
-              color: CustomColors.primary,
+              color: theme.disabledColor,
             ),
           ),
         ),

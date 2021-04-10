@@ -32,6 +32,7 @@ class _NeumorphicNoteState extends State<NeumorphicNote> {
               transitionType: ContainerTransitionType.fadeThrough,
               closedColor: theme.baseColor,
               openColor: theme.baseColor,
+              middleColor: theme.baseColor,
               openBuilder: (context, action) {
                 return ExpandedNote(note: widget.note);
               },

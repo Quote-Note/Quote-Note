@@ -41,7 +41,7 @@ class _AppBarGroupState extends State<AppBarGroup> {
               child: Container(
                 height: 40,
                 width: 40,
-                color: CustomColors.primary,
+                color: theme.disabledColor,
             ),
           ),
         ),

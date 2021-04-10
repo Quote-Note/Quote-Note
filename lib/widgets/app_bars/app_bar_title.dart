@@ -148,7 +148,7 @@ class _AppBarTitleState extends State<AppBarTitle> {
           child: ClipOval(
             child: Icon(
               Icons.logout,
-              color: CustomColors.primary,
+              color: theme.disabledColor,
             ),
           ),
         ),

@@ -10,17 +10,18 @@ class CustomColors {
   static final Color darkShadow = Color(0xFFBECDE2);
 
   //Dark Theme
-  static final Color nightPrimary = Color(0xFF4ABCA1);
+  static final Color nightPrimary = Color(0xFF64B9A6);
   static final Color nightHeaderText = Color(0xFFEEEEEE);
   static final Color nightBodyText = Color(0xFFE0E0E0);
-  static final Color nightBG = Color(0xFF3D3E3D);
-  static final Color nightLightShadow = Color(0xFF515251);
-  static final Color nightDarkShadow = Color(0xFF323432);
+  static final Color nightBG = Color(0xFF212121);
+  static final Color nightLightShadow = Color(0xFF333333);
+  static final Color nightDarkShadow = Color(0xFF141414);
 
   static final Color red = Color(0xFFF25F5C);
   static final Color orange = Color(0xFFFFAD69); 
   static final Color yellow = Color(0xFFFFE066);
   static final Color blue = Color(0xFF247BA0);
   static final Color lavender = Color(0xFFCBBAED);
-  static final Color lime = Color(0xFFE0FF4F);
+  static final Color indigo = Color(0xFF171738);
+  static final Color mint = Color(0xFFB9FFB7);
 }

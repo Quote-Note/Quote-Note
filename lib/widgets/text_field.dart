@@ -23,6 +23,7 @@ class NeumorphicTextField extends StatefulWidget {
 class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
   @override
   Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
     return SizedBox(
       width: double.infinity,
       child: Neumorphic(
@@ -33,11 +34,12 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: TextFormField(
           controller: widget.controller,
-          style: TextStyle(color: CustomColors.bodyText),
+          style: TextStyle(color: theme.variantColor),
           decoration: InputDecoration(
             icon: widget.icon,
             border: InputBorder.none,
             labelText: widget.labelText,
+            labelStyle: TextStyle(color: theme.variantColor),
           ),
           validator: (String? value) {
               if (value!.isEmpty) {

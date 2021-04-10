@@ -20,7 +20,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: _isSigningIn
           ? CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(CustomColors.primary),
+              valueColor: AlwaysStoppedAnimation<Color>(theme.disabledColor),
             )
           : NeumorphicButton(
               style: NeumorphicStyle(

@@ -42,7 +42,7 @@ class _AppBarNoteState extends State<AppBarNote> {
               child: Container(
                 height: 40,
                 width: 40,
-                color: CustomColors.primary,
+                color: theme.disabledColor
             ),
           ),
         ),
