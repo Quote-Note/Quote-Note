@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
+import 'package:notes_app/screens/profile_screen.dart';
+import 'package:notes_app/screens/sign_in_screen.dart';
+import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/cards/card.dart';
@@ -13,15 +17,15 @@ import 'package:notes_app/widgets/notes/note_overview.dart';
 
 import 'notes_screen.dart';
 
-class UserInfoScreen extends StatefulWidget {
-  const UserInfoScreen({Key? key, required User user})
+class GroupScreen extends StatefulWidget {
+  const GroupScreen({Key? key, required User user})
       : _user = user,
         super(key: key);
 
   final User _user;
 
   @override
-  _UserInfoScreenState createState() => _UserInfoScreenState();
+  _GroupScreenState createState() => _GroupScreenState();
 }
 
 class Group {
@@ -38,7 +42,7 @@ class Group {
   }
 }
 
-class _UserInfoScreenState extends State<UserInfoScreen> {
+class _GroupScreenState extends State<GroupScreen> {
   late User _user;
 
   @override
@@ -50,8 +54,8 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
 
   //Dummy data
   List<Group> groups = [
-    Group('Class', 'Maths', CustomColors.yellow,
-      ["Mr Grabski",
+    Group('Class', 'Maths', CustomColors.yellow, [
+      "Mr Grabski",
       "Mr Pegg",
       "Miss Collins",
       "Miss Collins",
@@ -75,10 +79,48 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: theme.baseColor,
-      bottomNavigationBar: AppBarBottom(buttons: List.empty()),
+      bottomNavigationBar: AppBarBottom(buttons: [
+        NeumorphicButton(
+          onPressed: () => {
+            Navigator.of(context)
+                .pushReplacement(Routes.routeTo(ProfileScreen(user: widget._user)))
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.person_rounded,
+              color: theme.defaultTextColor,
+            ),
+          ),
+        ),
+        NeumorphicButton(
+          onPressed: () async {
+            setState(() {});
+            await Authentication.signOut(context: context);
+            setState(() {});
+            Navigator.of(context).pushReplacement(Routes.routeTo(SignInScreen()));
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.logout,
+              color: theme.disabledColor,
+            ),
+          ),
+        ),
+      ]),
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,

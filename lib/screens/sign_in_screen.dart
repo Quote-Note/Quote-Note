@@ -1,34 +1,19 @@
-import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/sign_up_screen.dart';
 import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/google_sign_in_button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-import 'user_info_screen.dart';
+import 'group_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   @override
   _SignInScreenState createState() => _SignInScreenState();
-}
-
-Route _routeToSignUpScreen() {
-  return PageRouteBuilder(
-    pageBuilder: (context, animation, secondaryAnimation) => SignUpScreen(),
-    transitionDuration: Duration(milliseconds:500),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return SharedAxisTransition(
-        animation: animation,
-        secondaryAnimation: secondaryAnimation,
-        transitionType: SharedAxisTransitionType.horizontal,
-        child: child,
-      );
-    },
-  );
 }
 
 class _SignInScreenState extends State<SignInScreen> {
@@ -106,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               if (user != null) {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
-                                    builder: (context) => UserInfoScreen(
+                                    builder: (context) => GroupScreen(
                                       user: user!,
                                     ),
                                   ),
@@ -120,7 +105,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             textColor: theme.defaultTextColor,
                             onPressed: () => {
                               Navigator.of(context)
-                                  .pushReplacement(_routeToSignUpScreen())
+                                  .pushReplacement(Routes.routeTo(SignUpScreen()))
                             },
                           ),
                         ],

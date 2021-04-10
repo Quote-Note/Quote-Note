@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/screens/group_screen.dart';
 
 class Authentication {
   static SnackBar customErrorSnackBar({required String content}) {
@@ -37,7 +37,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoScreen(
+          builder: (context) => GroupScreen(
             user: user,
           ),
         ),

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/user_info_screen.dart';
+import 'package:notes_app/screens/group_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/utils/profile.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_profile.dart';
@@ -124,7 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           onPressed: () async {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
-                builder: (context) => UserInfoScreen(
+                builder: (context) => GroupScreen(
                   user: _user,
                 ),
               ),
@@ -146,6 +146,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -319,7 +320,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   .pushReplacement(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      UserInfoScreen(
+                                                      GroupScreen(
                                                     user: user,
                                                   ),
                                                 ),

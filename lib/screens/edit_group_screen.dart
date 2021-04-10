@@ -3,26 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
+import 'package:notes_app/screens/group_screen.dart';
+import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
 
-class CreateGroupScreen extends StatefulWidget {
-  const CreateGroupScreen({
+class EditGroupScreen extends StatefulWidget {
+  const EditGroupScreen({
     Key? key,
-    required User user,
-  })   : _user = user,
+    required Group group,
+  })   : _group = group,
         super(key: key);
 
-  final User _user;
+  final Group _group;
 
   @override
-  _CreateGroupScreenState createState() => _CreateGroupScreenState();
+  _EditGroupScreenState createState() => _EditGroupScreenState();
 }
 
-class _CreateGroupScreenState extends State<CreateGroupScreen> {
+class _EditGroupScreenState extends State<EditGroupScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -40,8 +42,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: AppBarTitle(
-            user: widget._user,
+          title: AppBarGroup(
+            group: widget._group
           ),
         ),
       ),
@@ -73,7 +75,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         flex: 1,
                         child: Container(
                             decoration: BoxDecoration(
-                              color: theme.disabledColor,
+                              color: widget._group.color,
                             ),
                             child: Padding(
                               padding:
@@ -89,7 +91,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     ),
                                     onPressed: () {},
                                     child: Icon(Icons.edit,
-                                        color: theme.disabledColor)),
+                                        color: widget._group.color)),
                               ),
                             )),
                       ),
@@ -112,14 +114,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                           labelText: 'Enter group title',
                                           icon: Icon(Icons.description, color: theme.variantColor,),
                                           controller: _nameController),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8.0),
-                                      child: NeumorphicTextField(
-                                          labelText: 'Invite members via email',
-                                          icon: Icon(Icons.email, color: theme.variantColor),
-                                          controller: _emailController),
                                     ),
                                   ],
                                 ),
@@ -149,10 +143,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               ),
                               SizedBox(height: 8),
                               Button(
-                                text: 'Create group',
-                                color: theme.disabledColor,
-                                textColor: CustomColors.bg,
-                                onPressed: () async {},
+                                text: 'Save group',
+                                color: widget._group.color,
+                                textColor: CustomColors.nightBG,
+                                onPressed: () async {}, 
                               ),
                             ],
                           ),

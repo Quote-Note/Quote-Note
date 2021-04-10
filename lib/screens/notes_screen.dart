@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/notes/note.dart';
 
-import 'user_info_screen.dart';
+import 'edit_group_screen.dart';
+import 'group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
   const NotesScreen({Key? key, required Group group})
@@ -60,14 +63,33 @@ class _NotesScreenState extends State<NotesScreen> {
       backgroundColor: theme.baseColor,
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
-    style: NeumorphicStyle(
-      boxShape: NeumorphicBoxShape.circle(),
-      depth: 3,
-      intensity: 1,
-    ),
-    onPressed: () {},
-    child: Icon(Icons.add, color: theme.defaultTextColor,),
-  ),
+          style: NeumorphicStyle(
+            boxShape: NeumorphicBoxShape.circle(),
+            depth: 3,
+            intensity: 1,
+          ),
+          onPressed: () {},
+          child: Icon(
+            Icons.add,
+            color: theme.defaultTextColor,
+          ),
+        ),
+        NeumorphicButton(
+          onPressed: () async {
+            Navigator.of(context).push(Routes.routeTo(EditGroupScreen(group: _group)));
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.menu_rounded,
+              color: theme.defaultTextColor,
+            ),
+          ),
+        ),
         NeumorphicButton(
           onPressed: () async {
             Navigator.of(context).pop();
@@ -88,6 +110,9 @@ class _NotesScreenState extends State<NotesScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
