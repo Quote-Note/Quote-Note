@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/screens/notes_screen.dart';
@@ -16,6 +15,7 @@ class ExpandedNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
+      backgroundColor: theme.baseColor,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
@@ -38,7 +38,7 @@ class ExpandedNote extends StatelessWidget {
           child: ClipOval(
             child: Icon(
               Icons.arrow_back,
-              color: CustomColors.primary,
+              color: theme.disabledColor,
             ),
           ),
         ),],
@@ -131,7 +131,7 @@ class ExpandedNote extends StatelessWidget {
                         child: Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                            color: CustomColors.primary,
+                            color: theme.disabledColor,
                           ),
                           child: Image(
                             fit: BoxFit.cover,

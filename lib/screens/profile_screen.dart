@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -61,6 +62,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isUpdating = false;
     });
     return returnResult;
+  }
+
+  Future<void> toggleNightMode(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    var isDarkMode = NeumorphicTheme.of(context)!.isUsingDark;
+
+    isDarkMode = !isDarkMode;
+    NeumorphicTheme.of(context)!.themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    prefs.setBool('darkMode', isDarkMode);
   }
 
   void saveProfile(
@@ -128,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: ClipOval(
             child: Icon(
               Icons.arrow_back,
-              color: CustomColors.primary,
+              color: theme.disabledColor,
             ),
           ),
         ),
@@ -165,7 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       height: MediaQuery.of(context).size.height - 200,
                       width: MediaQuery.of(context).size.width,
                       decoration: BoxDecoration(
-                        color: CustomColors.primary,
+                        color: theme.disabledColor
                       ),
                     ),
                     Container(
@@ -183,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               children: [
                                 NeumorphicButton(
                                   onPressed: () {
-                                    NeumorphicTheme.of(context)!.themeMode = NeumorphicTheme.of(context)!.isUsingDark ? ThemeMode.light : ThemeMode.dark;
+                                    toggleNightMode(context);
                                   },
                                   style: NeumorphicStyle(
                                     depth: 3,
@@ -292,7 +302,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   !isSaving
                                       ? Button(
                                           text: 'Save',
-                                          color: CustomColors.primary,
+                                          color: theme.disabledColor,
                                           textColor: CustomColors.bg,
                                           onPressed: () async {
                                             User? user;

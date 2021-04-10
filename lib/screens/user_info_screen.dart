@@ -59,7 +59,7 @@ class _UserInfoScreenState extends State<UserInfoScreen> {
     ]),
     Group('Class', 'English', CustomColors.red,
         ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"]),
-    Group('Staff', 'Announcements', CustomColors.lime, ["Mr Grabski"]),
+    Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"]),
   ];
 
   List<String> notes = [

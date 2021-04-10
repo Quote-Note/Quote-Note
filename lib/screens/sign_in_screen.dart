@@ -91,7 +91,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           Button(
                             text: 'Log in',
-                            color: CustomColors.primary,
+                            color: theme.disabledColor,
                             textColor: CustomColors.bg,
                             onPressed: () async {
                               User? user;
@@ -141,7 +141,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     }
                     return CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        CustomColors.primary,
+                        theme.disabledColor,
                       ),
                     );
                   },

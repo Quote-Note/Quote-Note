@@ -90,7 +90,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           ),
                           Button(
                             text: 'Create account',
-                            color: CustomColors.primary,
+                            color: theme.disabledColor,
                             textColor: CustomColors.bg,
                             onPressed: () async {
                               User? user;
@@ -140,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     }
                     return CircularProgressIndicator(
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        CustomColors.primary,
+                        theme.disabledColor,
                       ),
                     );
                   },

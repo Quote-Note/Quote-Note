@@ -31,6 +31,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
     return Scaffold(
+      backgroundColor: theme.baseColor,
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
@@ -45,7 +46,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       ),
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
-          child: Icon(Icons.arrow_back, color: CustomColors.primary),
+          child: Icon(Icons.arrow_back, color: theme.disabledColor),
           onPressed: () => {Navigator.of(context).pop()},
           style: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
         )
@@ -71,7 +72,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         flex: 1,
                         child: Container(
                             decoration: BoxDecoration(
-                              color: CustomColors.primary,
+                              color: theme.disabledColor,
                             ),
                             child: Padding(
                               padding:
@@ -87,7 +88,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     ),
                                     onPressed: () {},
                                     child: Icon(Icons.edit,
-                                        color: CustomColors.primary)),
+                                        color: theme.disabledColor)),
                               ),
                             )),
                       ),
@@ -148,7 +149,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               SizedBox(height: 8),
                               Button(
                                 text: 'Create group',
-                                color: CustomColors.primary,
+                                color: theme.disabledColor,
                                 textColor: CustomColors.bg,
                                 onPressed: () async {},
                               ),

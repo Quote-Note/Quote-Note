@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:notes_app/res/custom_colors.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/screens/notes_screen.dart';
 
@@ -42,7 +41,7 @@ class _AppBarNoteState extends State<AppBarNote> {
               child: Container(
                 height: 40,
                 width: 40,
-                color: CustomColors.primary,
+                color: theme.disabledColor
             ),
           ),
         ),
