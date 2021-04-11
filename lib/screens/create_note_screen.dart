@@ -1,30 +1,61 @@
+import 'dart:io';
+import 'dart:math';
+
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/utils/group.dart';
+import 'package:notes_app/utils/note.dart';
+import 'package:notes_app/utils/profile.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
 class CreateNoteScreen extends StatefulWidget {
-  const CreateNoteScreen({
-    Key? key,
-    required Group group,
-  })   : _group = group,
-        super(key: key);
+  final Group group;
+  final Function refresh;
 
-  final Group _group;
+  const CreateNoteScreen({Key? key, required this.group, required this.refresh})
+      : super(key: key);
 
   @override
   _CreateNoteScreenState createState() => _CreateNoteScreenState();
 }
 
+bool isUpdating = false;
+final cloudinary = CloudinaryPublic('quotenote', 'profile', cache: false);
+String tempURL = '';
+
 class _CreateNoteScreenState extends State<CreateNoteScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _noteController = TextEditingController();
+
+  @override
+  void initState() {
+    isUpdating = false;
+    tempURL = '';
+
+    super.initState();
+  }
+
+  Future<String> uploadToCloudinary(File file) async {
+    setState(() {
+      isUpdating = true;
+    });
+
+    String returnResult =
+        await Profile.uploadToCloudinary(context, file, cloudinary);
+
+    setState(() {
+      isUpdating = false;
+    });
+    return returnResult;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,13 +72,24 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: AppBarGroup(group: widget._group),
+          title: AppBarGroup(group: widget.group),
         ),
       ),
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
           child: Icon(Icons.arrow_back, color: theme.disabledColor),
-          onPressed: () => {Navigator.of(context).pop()},
+          onPressed: () async {
+            if (tempURL != '') {
+              final response = await cloudinary.client!.delete(
+                Uri.parse(tempURL),
+              );
+              if (response.statusCode != 200) {
+                //Do something else
+              }
+            }
+
+            Navigator.of(context).pop();
+          },
           style: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
         )
       ]),
@@ -72,7 +114,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                         flex: 1,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: widget._group.color,
+                            color: widget.group.color,
                           ),
                         ),
                       ),
@@ -92,6 +134,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
+                                          maxLines: 1,
                                           labelText: 'Enter note title',
                                           icon: Icon(
                                             Icons.description,
@@ -123,29 +166,47 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                                   child: Stack(
                                     children: [
                                       Container(
-                                        width:
-                                            MediaQuery.of(context).size.width,
-                                        child: Image(
-                                          fit: BoxFit.cover,
-                                          image: AssetImage(
-                                              "assets/dummy_image.jpg"),
-                                        ),
-                                      ),
+                                          color: widget.group.color,
+                                          width:
+                                              MediaQuery.of(context).size.width,
+                                          child: tempURL != ''
+                                              ? Image.network(
+                                                  tempURL,
+                                                  key: UniqueKey(),
+                                                  scale: 1,
+                                                  fit: BoxFit.cover,
+                                                )
+                                              : Container()),
                                       Align(
                                         alignment: Alignment.bottomRight,
                                         child: Padding(
                                           padding: const EdgeInsets.all(15.0),
-                                          child: NeumorphicButton(
-                                              style: NeumorphicStyle(
-                                                color: theme.baseColor,
-                                                boxShape:
-                                                    NeumorphicBoxShape.circle(),
-                                                depth: 5,
-                                                intensity: 0,
-                                              ),
-                                              onPressed: () {},
-                                              child: Icon(Icons.file_upload,
-                                                  color: widget._group.color)),
+                                          child: !isUpdating
+                                              ? NeumorphicButton(
+                                                  style: NeumorphicStyle(
+                                                    color: theme.baseColor,
+                                                    boxShape: NeumorphicBoxShape
+                                                        .circle(),
+                                                    depth: 5,
+                                                    intensity: 0,
+                                                  ),
+                                                  onPressed: () async {
+                                                    File? attatchment =
+                                                        await Profile
+                                                            .pickFile();
+                                                    if (attatchment != null) {
+                                                      String _photoURL =
+                                                          await uploadToCloudinary(
+                                                              attatchment);
+                                                      setState(() {
+                                                        tempURL = _photoURL;
+                                                      });
+                                                    }
+                                                  },
+                                                  child: Icon(Icons.file_upload,
+                                                      color:
+                                                          widget.group.color))
+                                              : CircularProgressIndicator(),
                                         ),
                                       ),
                                     ],
@@ -155,9 +216,37 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                               SizedBox(height: 8),
                               Button(
                                 text: 'Create note',
-                                color: widget._group.color,
+                                color: widget.group.color,
                                 textColor: CustomColors.nightBG,
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  if (!isUpdating) {
+                                    setState(() {
+                                      if (_formKey.currentState!.validate()) {
+                                        Note note = Note(
+                                          title: _titleController.value.text,
+                                          body: _noteController.value.text,
+                                          author: (FirebaseAuth
+                                                      .instance
+                                                      .currentUser!
+                                                      .displayName !=
+                                                  null
+                                              ? FirebaseAuth.instance
+                                                  .currentUser!.displayName
+                                              : '')!,
+                                          timestamp: DateTime.now(),
+                                          attachmentURL: tempURL,
+                                        );
+
+                                        tempURL = '';
+
+                                        widget.group.notes.add(note);
+                                        widget.refresh();
+
+                                        Navigator.of(context).pop();
+                                      }
+                                    });
+                                  }
+                                },
                               ),
                             ],
                           ),

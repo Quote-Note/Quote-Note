@@ -69,7 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     var isDarkMode = NeumorphicTheme.of(context)!.isUsingDark;
 
     isDarkMode = !isDarkMode;
-    NeumorphicTheme.of(context)!.themeMode = isDarkMode ? ThemeMode.dark : ThemeMode.light;
+    NeumorphicTheme.of(context)!.themeMode =
+        isDarkMode ? ThemeMode.dark : ThemeMode.light;
     prefs.setBool('darkMode', isDarkMode);
   }
 
@@ -146,7 +147,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -175,9 +178,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(
                       height: MediaQuery.of(context).size.height - 200,
                       width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: theme.disabledColor
-                      ),
+                      decoration: BoxDecoration(color: theme.disabledColor),
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height - 240,
@@ -228,8 +229,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             child: tempURL != ''
                                                 ? Image.network(
                                                     tempURL,
-                                                    key: ValueKey(
-                                                        Random().nextInt(100)),
+                                                    key: UniqueKey(),
                                                     scale: 1,
                                                     fit: BoxFit.fitWidth,
                                                   )

@@ -35,14 +35,7 @@ class _GroupScreenState extends State<GroupScreen> {
 
 //Dummy data
   List<Note> dummyNotes = [
-    Note(
-        'Equation',
-        'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
-        'Joe',
-        DateTime.utc(2021, 03, 31)),
-    Note('Class', 'Maths', 'Test', DateTime.utc(2021, 03, 31)),
-    Note('Equation', 'Lorem ipsum', 'Joe', DateTime.utc(2021, 04, 7)),
-    Note('Class', 'Maths', 'Test', DateTime.utc(2020, 03, 31)),
+    Note(title: 'Equation', body: 'y=mx+c', author: '', timestamp: DateTime.utc(2021, 03, 31)),
   ];
 
   List<Group> groups = [];
@@ -60,25 +53,29 @@ class _GroupScreenState extends State<GroupScreen> {
 
     groups = [
       Group(
-          'Class',
-          'Maths',
-          CustomColors.yellow,
-          [
-            "Mr Grabski",
-            "Mr Pegg",
-            "Miss Collins",
-            "Miss Collins",
-            "Miss Collins"
-          ],
-          dummyNotes),
+          type: 'Class',
+          name: 'English',
+          color: CustomColors.red,
+          admins: ["Mr Eveline", "Miss Collins"],
+          notes: List.from(dummyNotes)),
       Group(
-          'Class',
-          'English',
-          CustomColors.red,
-          ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"],
-          dummyNotes),
-      Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"],
-          dummyNotes),
+          type: 'Class',
+          name: 'Maths',
+          color: CustomColors.yellow,
+          admins: ["Steve", "Miss Dennis", "Miss Collins"],
+          notes: List.from(dummyNotes)),
+      Group(
+          type: 'Class',
+          name: 'Work',
+          color: CustomColors.mint,
+          admins: ["Mr Laurence", "Marissa"],
+          notes: List.from(dummyNotes)),
+      Group(
+          type: 'Class',
+          name: 'Announcements',
+          color: CustomColors.orange,
+          admins: ["Mr Pegg", "Miss Chanel", "Miss Collins"],
+          notes: List.from(dummyNotes)),
     ];
 
     super.initState();
@@ -162,9 +159,8 @@ class _GroupScreenState extends State<GroupScreen> {
                             groupName: groups[index].name,
                             color: groups[index].color,
                             onPressed: () => {
-                                  Navigator.of(context).push(
-                                      Routes.routeTo(
-                                          NotesScreen(group: groups[index])))
+                                  Navigator.of(context).push(Routes.routeTo(
+                                      NotesScreen(group: groups[index])))
                                 },
                             groupType: groups[index].type,
                             adminNames: groups[index].admins),

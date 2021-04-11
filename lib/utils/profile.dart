@@ -8,24 +8,6 @@ import 'package:flutter/material.dart';
 import 'auth.dart';
 
 class Profile{
-  /* static Future<void> saveProfile(String email, String name,String tempURL, User _user) async {
-    if (email != '') {
-      await _user.updateEmail(email).then((value) => _user.reload());
-    }
-    
-    if (name != '') {
-      await _user.updateProfile(displayName: name);
-    }
-
-    await _user.updateProfile(photoURL: tempURL).then((value) async {
-      await _user
-          .reload()
-          .then((value) => {imageCache!.clear()})
-          .then((value) => {imageCache!.clearLiveImages()})
-          .then((value) => {_user = FirebaseAuth.instance.currentUser!});
-    });
-  }
- */
 
   static void resetPassword({required BuildContext context, String? emailAddress}){
     FirebaseAuth auth = FirebaseAuth.instance;

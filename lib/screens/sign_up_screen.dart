@@ -63,6 +63,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         children: [
                           NeumorphicTextField(
                             keyboardType: TextInputType.emailAddress,
+                            maxLines: 1,
                             labelText: 'Email',
                             icon: Icon(Icons.email, color: theme.variantColor),
                             controller: _emailController,
@@ -70,6 +71,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           SizedBox(height: 10),
                           NeumorphicTextField(
                             keyboardType: TextInputType.visiblePassword,
+                            maxLines: 1,
                             labelText: 'Password',
                             icon: Icon(Icons.lock_rounded, color: theme.variantColor,),
                             password: true,
