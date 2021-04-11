@@ -11,7 +11,6 @@ class CreateGroupCard extends StatelessWidget {
   const CreateGroupCard({
     Key? key,
   }) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     return Padding(

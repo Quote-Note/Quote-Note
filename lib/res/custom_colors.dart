@@ -20,8 +20,12 @@ class CustomColors {
   static final Color red = Color(0xFFF25F5C);
   static final Color orange = Color(0xFFFFAD69); 
   static final Color yellow = Color(0xFFFFE066);
-  static final Color blue = Color(0xFF247BA0);
+  static final Color lightBlue = Color(0xFF9AD9DB);
+  static final Color blue = Color(0xFF8EA4C8);
   static final Color lavender = Color(0xFFCBBAED);
-  static final Color indigo = Color(0xFF171738);
+  static final Color pink = Color(0xFFEEB8C6);
+  static final Color darkGreen = Color(0xFF8DA47E);
+  static final Color silver = Color(0xFFB2B2B2);
+  static final Color brown = Color(0xFFAF8C72);
   static final Color mint = Color(0xFFB9FFB7);
 }

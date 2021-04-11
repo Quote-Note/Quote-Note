@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
@@ -127,6 +126,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               MaterialPageRoute(
                 builder: (context) => GroupScreen(
                   user: _user,
+                  key: widget.key,
                 ),
               ),
             );
