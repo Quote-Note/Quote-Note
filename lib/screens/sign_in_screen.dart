@@ -63,12 +63,14 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Column(
                         children: [
                           NeumorphicTextField(
+                            keyboardType: TextInputType.emailAddress,
                             labelText: 'Email',
                             icon: Icon(Icons.email, color: theme.variantColor),
                             controller: _emailController,
                           ),
                           SizedBox(height: 10),
                           NeumorphicTextField(
+                            keyboardType: TextInputType.visiblePassword,
                             labelText: 'Password',
                             icon: Icon(Icons.lock_rounded, color: theme.variantColor,),
                             password: true,

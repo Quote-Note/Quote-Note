@@ -7,6 +7,7 @@ import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/notes/note.dart';
 
+import 'create_note_screen.dart';
 import 'edit_group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
@@ -42,7 +43,9 @@ class _NotesScreenState extends State<NotesScreen> {
             depth: 3,
             intensity: 1,
           ),
-          onPressed: () {},
+          onPressed: () {Navigator.of(context).push(
+                                      Routes.routeTo(
+                                        CreateNoteScreen(group: _group)));},
           child: Icon(
             Icons.add,
             color: theme.defaultTextColor,

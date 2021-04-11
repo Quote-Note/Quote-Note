@@ -14,5 +14,6 @@ class Group {
     this.name = name;
     this.color = color;
     this.admins = admins;
+    this.notes = notes;
   }
 }

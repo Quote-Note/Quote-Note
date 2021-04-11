@@ -8,8 +8,8 @@ import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-class EditGroupScreen extends StatefulWidget {
-  const EditGroupScreen({
+class CreateNoteScreen extends StatefulWidget {
+  const CreateNoteScreen({
     Key? key,
     required Group group,
   })   : _group = group,
@@ -18,12 +18,13 @@ class EditGroupScreen extends StatefulWidget {
   final Group _group;
 
   @override
-  _EditGroupScreenState createState() => _EditGroupScreenState();
+  _CreateNoteScreenState createState() => _CreateNoteScreenState();
 }
 
-class _EditGroupScreenState extends State<EditGroupScreen> {
+class _CreateNoteScreenState extends State<CreateNoteScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _noteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -70,26 +71,10 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                       Expanded(
                         flex: 1,
                         child: Container(
-                            decoration: BoxDecoration(
-                              color: widget._group.color,
-                            ),
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 40.0),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: NeumorphicButton(
-                                    style: NeumorphicStyle(
-                                      color: theme.baseColor,
-                                      boxShape: NeumorphicBoxShape.circle(),
-                                      depth: 5,
-                                      intensity: 0,
-                                    ),
-                                    onPressed: () {},
-                                    child: Icon(Icons.edit,
-                                        color: widget._group.color)),
-                              ),
-                            )),
+                          decoration: BoxDecoration(
+                            color: widget._group.color,
+                          ),
+                        ),
                       ),
                       Expanded(
                         flex: 9,
@@ -107,42 +92,69 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
-                                          labelText: 'Enter group title',
+                                          labelText: 'Enter note title',
                                           icon: Icon(
                                             Icons.description,
                                             color: theme.variantColor,
                                           ),
-                                          controller: _nameController),
+                                          controller: _titleController),
                                     ),
                                   ],
                                 ),
                               ),
                               SizedBox(height: 8),
                               Expanded(
+                                  child: NeumorphicTextField(
+                                      maxLines: 6,
+                                      keyboardType: TextInputType.multiline,
+                                      labelText: 'Enter note',
+                                      icon: Icon(
+                                        Icons.notes,
+                                        color: theme.variantColor,
+                                      ),
+                                      controller: _noteController)),
+                              SizedBox(height: 8),
+                              Expanded(
                                 child: Neumorphic(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                                    style: NeumorphicStyle(
-                                      depth: -2,
-                                      intensity: 1,
-                                    ),
-                                    child: ListView(
-                                      children: [
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                      ],
-                                    )),
+                                  style: NeumorphicStyle(
+                                    depth: 3,
+                                    intensity: 1,
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Container(
+                                        width:
+                                            MediaQuery.of(context).size.width,
+                                        child: Image(
+                                          fit: BoxFit.cover,
+                                          image: AssetImage(
+                                              "assets/dummy_image.jpg"),
+                                        ),
+                                      ),
+                                      Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(15.0),
+                                          child: NeumorphicButton(
+                                              style: NeumorphicStyle(
+                                                color: theme.baseColor,
+                                                boxShape:
+                                                    NeumorphicBoxShape.circle(),
+                                                depth: 5,
+                                                intensity: 0,
+                                              ),
+                                              onPressed: () {},
+                                              child: Icon(Icons.file_upload,
+                                                  color: widget._group.color)),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
                               ),
                               SizedBox(height: 8),
                               Button(
-                                text: 'Save group',
+                                text: 'Create note',
                                 color: widget._group.color,
                                 textColor: CustomColors.nightBG,
                                 onPressed: () async {},
@@ -158,45 +170,6 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class Member extends StatelessWidget {
-  const Member({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = NeumorphicTheme.currentTheme(context);
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'test@gmail.com',
-            style: TextStyle(color: theme.variantColor),
-          ),
-          NeumorphicButton(
-            padding: EdgeInsets.all(10),
-            onPressed: () async {},
-            style: NeumorphicStyle(
-              depth: 3,
-              intensity: 1,
-              boxShape: NeumorphicBoxShape.circle(),
-            ),
-            child: ClipOval(
-              child: Icon(
-                Icons.star,
-                color: theme.variantColor,
-                size: 15,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }

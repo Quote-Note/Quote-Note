@@ -30,11 +30,11 @@ class GroupScreen extends StatefulWidget {
   _GroupScreenState createState() => _GroupScreenState();
 }
 
+class _GroupScreenState extends State<GroupScreen> {
+  late User _user;
 
-
-
-
-List<Note> dummyNotes = [
+//Dummy data
+  List<Note> dummyNotes = [
     Note(
         'Equation',
         'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
@@ -45,29 +45,7 @@ List<Note> dummyNotes = [
     Note('Class', 'Maths', 'Test', DateTime.utc(2020, 03, 31)),
   ];
 
-class _GroupScreenState extends State<GroupScreen> {
-  late User _user;
-
-  @override
-  void initState() {
-    _user = widget._user;
-
-    super.initState();
-  }
-
-  //Dummy data
-  List<Group> groups = [
-    Group('Class', 'Maths', CustomColors.yellow, [
-      "Mr Grabski",
-      "Mr Pegg",
-      "Miss Collins",
-      "Miss Collins",
-      "Miss Collins"
-    ], dummyNotes),
-    Group('Class', 'English', CustomColors.red,
-        ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"], dummyNotes),
-    Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"], dummyNotes),
-  ];
+  List<Group> groups = [];
 
   List<String> notes = [
     'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
@@ -75,6 +53,36 @@ class _GroupScreenState extends State<GroupScreen> {
     'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
     'Blah blah blahadfghasdf gdfs dfg sdfhgd',
   ];
+
+  @override
+  void initState() {
+    _user = widget._user;
+
+    groups = [
+      Group(
+          'Class',
+          'Maths',
+          CustomColors.yellow,
+          [
+            "Mr Grabski",
+            "Mr Pegg",
+            "Miss Collins",
+            "Miss Collins",
+            "Miss Collins"
+          ],
+          dummyNotes),
+      Group(
+          'Class',
+          'English',
+          CustomColors.red,
+          ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"],
+          dummyNotes),
+      Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"],
+          dummyNotes),
+    ];
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +93,8 @@ class _GroupScreenState extends State<GroupScreen> {
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
           onPressed: () => {
-            Navigator.of(context)
-                .pushReplacement(Routes.routeTo(ProfileScreen(user: widget._user)))
+            Navigator.of(context).pushReplacement(
+                Routes.routeTo(ProfileScreen(user: widget._user)))
           },
           style: NeumorphicStyle(
             depth: 3,
@@ -105,7 +113,8 @@ class _GroupScreenState extends State<GroupScreen> {
             setState(() {});
             await Authentication.signOut(context: context);
             setState(() {});
-            Navigator.of(context).pushReplacement(Routes.routeTo(SignInScreen()));
+            Navigator.of(context)
+                .pushReplacement(Routes.routeTo(SignInScreen()));
           },
           style: NeumorphicStyle(
             depth: 3,
@@ -123,7 +132,9 @@ class _GroupScreenState extends State<GroupScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
@@ -152,12 +163,8 @@ class _GroupScreenState extends State<GroupScreen> {
                             color: groups[index].color,
                             onPressed: () => {
                                   Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) => NotesScreen(
-                                        group: groups[index],
-                                      ),
-                                    ),
-                                  )
+                                      Routes.routeTo(
+                                          NotesScreen(group: groups[index])))
                                 },
                             groupType: groups[index].type,
                             adminNames: groups[index].admins),
