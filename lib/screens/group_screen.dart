@@ -6,6 +6,8 @@ import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/profile_screen.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
 import 'package:notes_app/utils/auth.dart';
+import 'package:notes_app/utils/group.dart';
+import 'package:notes_app/utils/note.dart';
 import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
@@ -28,19 +30,20 @@ class GroupScreen extends StatefulWidget {
   _GroupScreenState createState() => _GroupScreenState();
 }
 
-class Group {
-  String type = 'No type';
-  String name = 'No group';
-  Color color = Colors.red;
-  List<String> admins = ['No Admins'];
 
-  Group(String type, String name, Color color, List<String> admins) {
-    this.type = type;
-    this.name = name;
-    this.color = color;
-    this.admins = admins;
-  }
-}
+
+
+
+List<Note> dummyNotes = [
+    Note(
+        'Equation',
+        'Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsumipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum Lorem ipsum',
+        'Joe',
+        DateTime.utc(2021, 03, 31)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2021, 03, 31)),
+    Note('Equation', 'Lorem ipsum', 'Joe', DateTime.utc(2021, 04, 7)),
+    Note('Class', 'Maths', 'Test', DateTime.utc(2020, 03, 31)),
+  ];
 
 class _GroupScreenState extends State<GroupScreen> {
   late User _user;
@@ -60,10 +63,10 @@ class _GroupScreenState extends State<GroupScreen> {
       "Miss Collins",
       "Miss Collins",
       "Miss Collins"
-    ]),
+    ], dummyNotes),
     Group('Class', 'English', CustomColors.red,
-        ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"]),
-    Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"]),
+        ["Mr Grabski", "Mr Pegg", "Miss Collins", "Miss Collins"], dummyNotes),
+    Group('Staff', 'Announcements', CustomColors.mint, ["Mr Grabski"], dummyNotes),
   ];
 
   List<String> notes = [

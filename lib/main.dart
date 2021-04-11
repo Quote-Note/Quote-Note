@@ -12,7 +12,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   analytics = FirebaseAnalytics();
+  await getTheme();
   runApp(MyApp());
+}
+
+Future getTheme() async {
+  final prefs = await SharedPreferences.getInstance();
+  if (prefs.getBool('darkMode') != null) {
+    theme = prefs.getBool('darkMode')! ? ThemeMode.dark : ThemeMode.light;
+  } else {
+    prefs.setBool('darkMode', true);
+    theme = ThemeMode.dark;
+  }
 }
 
 class RemoveGlow extends ScrollBehavior {
@@ -53,55 +64,24 @@ final NeumorphicThemeData darkTheme = NeumorphicThemeData(
   intensity: 1,
 );
 
-ThemeMode theme = ThemeMode.light;
+ThemeMode? theme;
 
 class MyApp extends StatelessWidget {
-  void getTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    if (prefs.getBool('darkMode') != null) {
-      theme = prefs.getBool('darkMode')! ? ThemeMode.dark : ThemeMode.light;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return StatefulWrapper(
-      onInit: getTheme,
-      child: NeumorphicApp(
-        title: 'QuoteNote',
-        debugShowCheckedModeBanner: false,
-        themeMode: theme,
-        builder: (context, child) {
-          return ScrollConfiguration(
-            behavior: RemoveGlow(),
-            child: child!,
-          );
-        },
-        theme: lightTheme,
-        darkTheme: darkTheme,
-        home: SignUpScreen(),
-      ),
+    return NeumorphicApp(
+      title: 'QuoteNote',
+      debugShowCheckedModeBanner: false,
+      themeMode: theme!,
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: RemoveGlow(),
+          child: child!,
+        );
+      },
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      home: SignUpScreen(),
     );
-  }
-}
-
-class StatefulWrapper extends StatefulWidget {
-  final Function onInit;
-  final Widget child;
-  const StatefulWrapper({required this.onInit, required this.child});
-  @override
-  _StatefulWrapperState createState() => _StatefulWrapperState();
-}
-
-class _StatefulWrapperState extends State<StatefulWrapper> {
-  @override
-  void initState() {
-    widget.onInit();
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return widget.child;
   }
 }

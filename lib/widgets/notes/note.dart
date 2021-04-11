@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:notes_app/screens/notes_screen.dart';
+import 'package:notes_app/utils/note.dart';
 
 import 'closed_note.dart';
 import 'expanded_note.dart';
