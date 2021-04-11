@@ -8,7 +8,6 @@ import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-
 class EditGroupScreen extends StatefulWidget {
   const EditGroupScreen({
     Key? key,
@@ -35,13 +34,13 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: Colors.transparent,
-          title: AppBarGroup(
-            group: widget._group
-          ),
+          title: AppBarGroup(group: widget._group),
         ),
       ),
       bottomNavigationBar: AppBarBottom(buttons: [
@@ -109,7 +108,10 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
                                           labelText: 'Enter group title',
-                                          icon: Icon(Icons.description, color: theme.variantColor,),
+                                          icon: Icon(
+                                            Icons.description,
+                                            color: theme.variantColor,
+                                          ),
                                           controller: _nameController),
                                     ),
                                   ],
@@ -143,7 +145,7 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                 text: 'Save group',
                                 color: widget._group.color,
                                 textColor: CustomColors.nightBG,
-                                onPressed: () async {}, 
+                                onPressed: () async {},
                               ),
                             ],
                           ),

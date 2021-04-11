@@ -31,6 +31,7 @@ class ClosedNote extends StatelessWidget {
             children: [
               Text(
                 note.title,
+                maxLines: 1,
                 style: TextStyle(
                   color: theme.defaultTextColor,
                   fontSize: 16,

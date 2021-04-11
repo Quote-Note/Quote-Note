@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -78,6 +80,7 @@ class ExpandedNote extends StatelessWidget {
                                 ),
                                 Text(
                                   note.title,
+                                  maxLines: 1,
                                   style: TextStyle(
                                     color: theme.defaultTextColor,
                                     fontWeight: FontWeight.bold,
@@ -134,10 +137,13 @@ class ExpandedNote extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: theme.disabledColor,
                           ),
-                          child: Image(
-                            fit: BoxFit.cover,
-                            image: AssetImage("assets/dummy_image.jpg"),
-                          ),
+                          child: note.attachmentURL != '' ? Image.network(
+                                            note.attachmentURL!,
+                                            key:
+                                                UniqueKey(),
+                                            scale: 1,
+                                            fit: BoxFit.cover,
+                                          ): Container(),
                         ),
                       ),
                     ],

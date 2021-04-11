@@ -7,6 +7,7 @@ import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/notes/note.dart';
 
+import 'create_note_screen.dart';
 import 'edit_group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
@@ -30,6 +31,12 @@ class _NotesScreenState extends State<NotesScreen> {
     super.initState();
   }
 
+  void refresh(){
+    setState(() {
+      _group = widget._group;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
@@ -42,7 +49,10 @@ class _NotesScreenState extends State<NotesScreen> {
             depth: 3,
             intensity: 1,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context)
+                .push(Routes.routeTo(CreateNoteScreen(group: _group, refresh: refresh,)));
+          },
           child: Icon(
             Icons.add,
             color: theme.defaultTextColor,
@@ -50,7 +60,8 @@ class _NotesScreenState extends State<NotesScreen> {
         ),
         NeumorphicButton(
           onPressed: () async {
-            Navigator.of(context).push(Routes.routeTo(EditGroupScreen(group: _group)));
+            Navigator.of(context)
+                .push(Routes.routeTo(EditGroupScreen(group: _group)));
           },
           style: NeumorphicStyle(
             depth: 3,
@@ -103,10 +114,13 @@ class _NotesScreenState extends State<NotesScreen> {
             children: [
               Expanded(
                 child: ListView.builder(
-                  clipBehavior: Clip.none,
+                  clipBehavior: Clip.antiAlias,
                   scrollDirection: Axis.vertical,
                   itemCount: _group.notes.length,
                   itemBuilder: (BuildContext context, int index) {
+                    //Sorts by most recent
+                    _group.notes
+                        .sort((a, b) => b.timestamp.compareTo(a.timestamp));
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: NeumorphicNote(

@@ -35,6 +35,8 @@ dependencies:
   # Animations
   animations: ^2.0.0
 
+  uuid: ^3.0.4
+
   # Firebase
   firebase_core: ^1.0.2
   firebase_analytics: ^8.0.0-dev.0

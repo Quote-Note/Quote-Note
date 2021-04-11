@@ -5,6 +5,8 @@ class NeumorphicTextField extends StatefulWidget {
   final String labelText;
   final Icon icon;
   final bool password;
+  int? maxLines = 1;
+  TextInputType? keyboardType = TextInputType.text;
   final TextEditingController controller;
 
   NeumorphicTextField(
@@ -12,6 +14,8 @@ class NeumorphicTextField extends StatefulWidget {
       required this.labelText,
       required this.icon,
       required this.controller,
+      this.keyboardType,
+      this.maxLines,
       this.password = false})
       : super(key: key);
 
@@ -32,6 +36,8 @@ class _NeumorphicTextFieldState extends State<NeumorphicTextField> {
         ),
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
         child: TextFormField(
+          maxLines: widget.maxLines,
+          keyboardType: widget.keyboardType,
           controller: widget.controller,
           style: TextStyle(color: theme.variantColor),
           decoration: InputDecoration(
