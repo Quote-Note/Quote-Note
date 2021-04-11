@@ -80,7 +80,7 @@ class CardContent extends StatelessWidget {
     final theme = NeumorphicTheme.currentTheme(context);
 
     String convertToNames() {
-      List<String> names = List<String>.empty();
+      List<String> names = [];
       adminNames.forEach((element) {
         names.add((element.displayName != null
             ? element.displayName

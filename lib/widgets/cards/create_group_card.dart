@@ -4,13 +4,19 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/screens/create_group_screen.dart';
+import 'package:notes_app/utils/group.dart';
 
 import 'card.dart';
 
 class CreateGroupCard extends StatelessWidget {
-  const CreateGroupCard({
+  final Function(Group group) refresh;
+  CreateGroupCard({
     Key? key,
+    required this.refresh,
   }) : super(key: key);
+
+  
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,6 +31,8 @@ class CreateGroupCard extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => CreateGroupScreen(
                   user: FirebaseAuth.instance.currentUser!,
+                  refresh: refresh,
+                  key: key,
                 ),
               ),
             );

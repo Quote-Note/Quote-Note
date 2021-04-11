@@ -12,6 +12,12 @@ import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
+Group emptyGroup = Group(
+    type: '',
+    admins: [FirebaseAuth.instance.currentUser!],
+    name: '',
+    color: CustomColors.mint,
+    notes: List.empty());
 Group group = Group(
     type: '',
     admins: [FirebaseAuth.instance.currentUser!],
@@ -21,8 +27,9 @@ Group group = Group(
 
 class CreateGroupScreen extends StatefulWidget {
   final User user;
+  final Function(Group group) refresh;
 
-  const CreateGroupScreen({Key? key, required this.user}) : super(key: key);
+  const CreateGroupScreen({Key? key, required this.user, required this.refresh}) : super(key: key);
 
   @override
   _CreateGroupScreenState createState() => _CreateGroupScreenState();
@@ -33,7 +40,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
-  final GlobalKey<GroupScreenState> _groupKey = GlobalKey();
 
   List<Color> colors = [
     CustomColors.red,
@@ -211,9 +217,9 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                     group.name = _nameController.value.text;
                                     group.type = _typeController.value.text;
 
-                                    Group _group = group;
+                                    widget.refresh(group);
 
-                                    _groupKey.currentState?.addGroup(_group);
+                                    group = emptyGroup;
                                   }
                                   Navigator.of(context).pop();
                                 },

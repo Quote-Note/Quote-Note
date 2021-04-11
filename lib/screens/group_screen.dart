@@ -6,7 +6,6 @@ import 'package:notes_app/screens/profile_screen.dart';
 import 'package:notes_app/screens/sign_in_screen.dart';
 import 'package:notes_app/utils/auth.dart';
 import 'package:notes_app/utils/group.dart';
-import 'package:notes_app/utils/note.dart';
 import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
@@ -18,21 +17,21 @@ import 'package:notes_app/widgets/notes/note_overview.dart';
 import 'notes_screen.dart';
 
 class GroupScreen extends StatefulWidget {
-  const GroupScreen({Key? key, required User user})
+  GroupScreen({Key? key, required User user})
       : _user = user,
         super(key: key);
-
+  
   final User _user;
 
   @override
   GroupScreenState createState() => GroupScreenState();
 }
 
-List<Group> groups = [];
+List<Group> groups = <Group>[];
 
 class GroupScreenState extends State<GroupScreen> {
   late User _user;
-  
+
   List<String> notes = [
     'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
     'Blah blah blahadfghasdf gdfs dfg sdfhgd',
@@ -40,9 +39,9 @@ class GroupScreenState extends State<GroupScreen> {
     'Blah blah blahadfghasdf gdfs dfg sdfhgd',
   ];
 
-  void addGroup(Group group){
+  addGroup(Group group){
     setState(() {
-      groups.insert(0,group);
+      groups.add(group);
     });
   }
 
@@ -124,10 +123,10 @@ class GroupScreenState extends State<GroupScreen> {
                   child: ListView.builder(
                     addRepaintBoundaries: false,
                     itemExtent: 300,
+                    shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
                     clipBehavior: Clip.none,
                     itemCount: groups.length + 2,
-                    shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
                       if (index < groups.length) {
                         return Padding(
@@ -143,7 +142,7 @@ class GroupScreenState extends State<GroupScreen> {
                               adminNames: groups[index].admins),
                         );
                       } else if (index == groups.length + 1) {
-                        return CreateGroupCard();
+                        return CreateGroupCard(refresh: addGroup);
                       } else {
                         return JoinGroupCard();
                       }
