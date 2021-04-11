@@ -5,7 +5,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'screens/sign_up_screen.dart';
-
+import 'package:flutter/services.dart';
 FirebaseAnalytics? analytics;
 
 void main() async {
@@ -13,6 +13,7 @@ void main() async {
   await Firebase.initializeApp();
   analytics = FirebaseAnalytics();
   await getTheme();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(MyApp());
 }
 

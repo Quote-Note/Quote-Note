@@ -1,10 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class NeumorphicCard extends StatefulWidget {
   final String groupName;
   final String groupType;
-  final List<String> adminNames;
+  final List<User> adminNames;
   final Color color;
   final Function()? onPressed;
   final Icon? icon;
@@ -61,7 +62,7 @@ class _NeumorphicCardState extends State<NeumorphicCard> {
 class CardContent extends StatelessWidget {
   final String groupName;
   final String groupType;
-  final List<String> adminNames;
+  final List<User> adminNames;
   final Color color;
   final Icon? icon;
 
@@ -77,6 +78,19 @@ class CardContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
+
+    String convertToNames() {
+      List<String> names = [];
+      adminNames.forEach((element) {
+        names.add((element.displayName != null
+            ? element.displayName
+            : element.email
+                .toString()
+                .substring(0, element.email.toString().indexOf('@')))!);
+      });
+      return names.join(' & ');
+    }
+
     return Flex(
       direction: Axis.vertical,
       children: <Widget>[
@@ -110,7 +124,7 @@ class CardContent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    adminNames.join(' & '),
+                    convertToNames(),
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: theme.variantColor,

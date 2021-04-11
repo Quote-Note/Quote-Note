@@ -39,6 +39,7 @@ class Authentication {
         MaterialPageRoute(
           builder: (context) => GroupScreen(
             user: user,
+            key: context.widget.key
           ),
         ),
       );

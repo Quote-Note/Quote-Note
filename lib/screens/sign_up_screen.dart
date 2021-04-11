@@ -11,6 +11,9 @@ import 'package:notes_app/widgets/google_sign_in_button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
 class SignUpScreen extends StatefulWidget {
+
+  SignUpScreen({Key? key}) : super(key: key);
+
   @override
   _SignUpScreenState createState() => _SignUpScreenState();
 }
@@ -95,6 +98,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                                 Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                     builder: (context) => GroupScreen(
+                                      key: widget.key,
                                       user: user!,
                                     ),
                                   ),

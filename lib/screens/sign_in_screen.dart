@@ -12,6 +12,7 @@ import 'package:notes_app/widgets/text_field.dart';
 import 'group_screen.dart';
 
 class SignInScreen extends StatefulWidget {
+  SignInScreen({Key? key}) : super(key: key);
   @override
   _SignInScreenState createState() => _SignInScreenState();
 }
@@ -58,7 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     SizedBox(height: 50),
                     Form(
-                      autovalidateMode: AutovalidateMode.onUserInteraction, 
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
                       key: _formKey,
                       child: Column(
                         children: [
@@ -74,7 +75,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             keyboardType: TextInputType.visiblePassword,
                             maxLines: 1,
                             labelText: 'Password',
-                            icon: Icon(Icons.lock_rounded, color: theme.variantColor,),
+                            icon: Icon(
+                              Icons.lock_rounded,
+                              color: theme.variantColor,
+                            ),
                             password: true,
                             controller: _passwordController,
                           ),
@@ -93,13 +97,10 @@ class _SignInScreenState extends State<SignInScreen> {
                               }
 
                               if (user != null) {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => GroupScreen(
-                                      user: user!,
-                                    ),
-                                  ),
-                                );
+                                Routes.routeTo(GroupScreen(
+                                  user: user,
+                                  key: widget.key,
+                                ));
                               }
                             },
                           ),
@@ -108,8 +109,8 @@ class _SignInScreenState extends State<SignInScreen> {
                             color: theme.baseColor,
                             textColor: theme.defaultTextColor,
                             onPressed: () => {
-                              Navigator.of(context)
-                                  .pushReplacement(Routes.routeTo(SignUpScreen()))
+                              Navigator.of(context).pushReplacement(
+                                  Routes.routeTo(SignUpScreen()))
                             },
                           ),
                         ],

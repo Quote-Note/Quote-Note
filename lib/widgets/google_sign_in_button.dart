@@ -46,6 +46,7 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                     MaterialPageRoute(
                       builder: (context) => GroupScreen(
                         user: user,
+                        key: widget.key
                       ),
                     ),
                   );
