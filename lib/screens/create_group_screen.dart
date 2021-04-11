@@ -124,16 +124,15 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                         context: context,
                                         builder: (BuildContext context) {
                                           return AlertDialog(
+                                            backgroundColor: Colors.transparent,
                                             titlePadding:
                                                 const EdgeInsets.all(0.0),
                                             contentPadding:
                                                 const EdgeInsets.all(8.0),
-                                            content: Neumorphic(
-                                              child: BlockPicker(
-                                                availableColors: colors,
-                                                pickerColor: group.color,
-                                                onColorChanged: changeColor,
-                                              ),
+                                            content: BlockPicker(
+                                              availableColors: colors,
+                                              pickerColor: group.color,
+                                              onColorChanged: changeColor,
                                             ),
                                           );
                                         },

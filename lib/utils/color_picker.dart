@@ -5,6 +5,8 @@ library block_colorpicker;
 import 'package:flutter/material.dart';
 
 import 'package:flutter_colorpicker/src/utils.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:notes_app/res/custom_colors.dart';
 
 const List<Color> _defaultColors = [
   Colors.red,
@@ -54,14 +56,22 @@ class BlockPicker extends StatefulWidget {
       BuildContext context, List<Color> colors, PickerItem child) {
     Orientation orientation = MediaQuery.of(context).orientation;
 
-    return Container(
-      width: orientation == Orientation.portrait ? 300.0 : 300.0,
-      height: orientation == Orientation.portrait ? 360.0 : 200.0,
-      child: GridView.count(
-        crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-        children: colors.map((Color color) => child(color)).toList(),
+    return Neumorphic(
+      style: NeumorphicStyle(
+        color: CustomColors.nightBG,
+        depth: 3,
+        intensity: 1,
+      ),
+      padding: const EdgeInsets.all(8),
+      child: SizedBox(
+        width: orientation == Orientation.portrait ? 300.0 : 300.0,
+        height: orientation == Orientation.portrait ? 360.0 : 200.0,
+        child: GridView.count(
+          crossAxisCount: orientation == Orientation.portrait ? 4 : 6,
+          crossAxisSpacing: 5.0,
+          mainAxisSpacing: 5.0,
+          children: colors.map((Color color) => child(color)).toList(),
+        ),
       ),
     );
   }
