@@ -35,6 +35,8 @@ dependencies:
   # Animations
   animations: ^2.0.0
 
+  # ID Generation
+  nanoid: ^1.0.0
   uuid: ^3.0.4
 
   # Firebase
@@ -42,6 +44,7 @@ dependencies:
   firebase_analytics: ^8.0.0-dev.0
   cloud_firestore: ^1.0.3
 
+  # Local Storage
   shared_preferences: ^2.0.5
 
   # User Auth
@@ -54,6 +57,7 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  nanoid: ^1.0.0
   
 
 dev_dependencies:

@@ -35,7 +35,7 @@ class _GroupScreenState extends State<GroupScreen> {
 
 //Dummy data
   List<Note> dummyNotes = [
-    Note(title: 'Equation', body: 'y=mx+c', author: '', timestamp: DateTime.utc(2021, 03, 31)),
+    Note(title: 'Equation', body: 'y=mx+c', author: '', timestamp: DateTime.utc(2021, 03, 31), attachmentURL: ''),
   ];
 
   List<Group> groups = [];
@@ -73,7 +73,7 @@ class _GroupScreenState extends State<GroupScreen> {
       Group(
           type: 'Class',
           name: 'Announcements',
-          color: CustomColors.orange,
+          color: CustomColors.primary,
           admins: ["Mr Pegg", "Miss Chanel", "Miss Collins"],
           notes: List.from(dummyNotes)),
     ];
