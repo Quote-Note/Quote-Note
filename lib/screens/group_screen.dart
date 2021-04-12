@@ -21,26 +21,54 @@ class GroupScreen extends StatefulWidget {
   GroupScreen({Key? key, required User user})
       : _user = user,
         super(key: key);
-  
+
   final User _user;
 
   @override
   GroupScreenState createState() => GroupScreenState();
 }
 
-List<Group> groups = <Group>[];
-
 class GroupScreenState extends State<GroupScreen> {
   late User _user;
 
-  List<String> notes = [
-    'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
-    'Blah blah blahadfghasdf gdfs dfg sdfhgd',
-    'Lorem uadfgdfs gosdfhhhhhhhhhhhhhhhhs...',
-    'Blah blah blahadfghasdf gdfs dfg sdfhgd',
-  ];
+  List<String> notes = [];
 
-  removeGroup(String groupID){
+  getRecentNotes() async {
+    List<String> recentNotes = [];
+    List<String> groupIDs = [];
+
+    notes.clear();
+    
+    var groupResult = await FirebaseFirestore.instance
+        .collection('group')
+        .where('members', arrayContains: _user.uid)
+        .get()
+        .then((value) {
+      value.docs.forEach((element) {
+        groupIDs.add(element.id);
+      });
+    });
+
+    var result = await FirebaseFirestore.instance
+        .collection('notes')
+        .where('groupID', whereIn: groupIDs)
+        .get()
+        .then((value) {
+          //print('data: $value');
+      value.docs.forEach((element) {
+        var data = element.data();
+        recentNotes.add(data!['note']);
+      });
+    });
+    if(recentNotes.length <= 2){
+      notes = recentNotes;
+    } else {
+      notes = recentNotes.take(3).toList();
+    }
+    
+  }
+
+  removeGroup(String groupID) {
     setState(() {
       print('test');
     });
@@ -49,6 +77,8 @@ class GroupScreenState extends State<GroupScreen> {
   @override
   void initState() {
     _user = widget._user;
+
+    getRecentNotes();
 
     super.initState();
   }
@@ -122,52 +152,54 @@ class GroupScreenState extends State<GroupScreen> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: StreamBuilder<QuerySnapshot>(
-                    stream:  FirebaseFirestore.instance.collection('group').snapshots(),
-                    builder: (context, snapshot) {
-                      int length = 0;
-                      if (snapshot.hasData) {
-                        length = snapshot.data!.docs.length;
-                      }
-                      return ListView.builder(
-                        addRepaintBoundaries: false,
-                        itemExtent: 300,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        clipBehavior: Clip.none,
-                        itemCount: length + 2,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (index < length) {
-                            var doc = snapshot.data!.docs[index];
-                            var group = Group(
-                              name: doc.get('name'),
-                              type: doc.get('type'),
-                              color: Color(doc.get('color')),
-                              noteIDs: doc.get('notes'),
-                              adminIDs: doc.get('admins'),
-                              roomCode: doc.get('roomCode'),
-                              id: doc.id
-                            );
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
-                              child: NeumorphicCard(
-                                  groupName: group.name,
+                      stream: FirebaseFirestore.instance
+                          .collection('group').where('members', arrayContains: _user.uid)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        int length = 0;
+                        if (snapshot.hasData) {
+                          length = snapshot.data!.docs.length;
+                        }
+                        return ListView.builder(
+                          addRepaintBoundaries: false,
+                          itemExtent: 300,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.horizontal,
+                          clipBehavior: Clip.none,
+                          itemCount: length + 2,
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index < length) {
+                              var doc = snapshot.data!.docs[index];
+                              var group = Group(
+                                  name: doc.get('name'),
+                                  type: doc.get('type'),
                                   color: Color(doc.get('color')),
-                                  onPressed: () => {
-                                        Navigator.of(context).push(Routes.routeTo(
-                                            NotesScreen(group: group)))
-                                      },
-                                  groupType: group.type,
-                                  adminNames: group.adminIDs),
-                            );
-                          } else if (index == length + 1) {
-                            return CreateGroupCard();
-                          } else {
-                            return JoinGroupCard();
-                          }
-                        },
-                      );
-                    }
-                  ),
+                                  noteIDs: doc.get('notes'),
+                                  adminIDs: doc.get('admins'),
+                                  roomCode: doc.get('roomCode'),
+                                  id: doc.id);
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 10),
+                                child: NeumorphicCard(
+                                    groupName: group.name,
+                                    color: Color(doc.get('color')),
+                                    onPressed: () => {
+                                          Navigator.of(context).push(
+                                              Routes.routeTo(
+                                                  NotesScreen(group: group)))
+                                        },
+                                    groupType: group.type,
+                                    adminNames: group.adminIDs),
+                              );
+                            } else if (index == length + 1) {
+                              return CreateGroupCard();
+                            } else {
+                              return JoinGroupCard();
+                            }
+                          },
+                        );
+                      }),
                 ),
               ),
               Expanded(

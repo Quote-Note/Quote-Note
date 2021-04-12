@@ -155,7 +155,7 @@ class ExpandedNote extends StatelessWidget {
                             color: theme.disabledColor,
                           ),
                           child: note.attachmentURL.isNotEmpty ? Image.network(
-                                            note.attachmentURL!,
+                                            note.attachmentURL,
                                             key:
                                                 UniqueKey(),
                                             scale: 1,

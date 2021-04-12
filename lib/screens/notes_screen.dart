@@ -166,7 +166,7 @@ class _NotesScreenState extends State<NotesScreen> {
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
-                        .collection('notes').orderBy('timestamp',descending: true)
+                        .collection('notes').where('groupID', isEqualTo: _group.id).orderBy('timestamp',descending: true)
                         .snapshots(),
                     builder: (context, snapshot) {
                       int length = 0;
@@ -180,7 +180,7 @@ class _NotesScreenState extends State<NotesScreen> {
                         itemBuilder: (BuildContext context, int index) {
                           var doc = snapshot.data!.docs[index];
 
-                          Timestamp timestamp = doc.get('timestamp');
+                          Timestamp timestamp = doc.get('timestamp') ?? Timestamp.now();
                           var note = Note(
                             title: doc.get('title'),
                             body: doc.get('note'),

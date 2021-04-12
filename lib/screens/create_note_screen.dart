@@ -255,6 +255,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                                           'timestamp':
                                               FieldValue.serverTimestamp(),
                                           'title': note.title,
+                                          'groupID': widget.group.id,
                                           'attachmentURL': note.attachmentURL
                                         });
 
