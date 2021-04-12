@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -15,7 +14,6 @@ import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
 
-final cloudinary = CloudinaryPublic('quotenote', 'profile', cache: false);
 String tempURL = '';
 bool isSaving = false;
 bool isUpdating = false;
@@ -49,13 +47,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.initState();
   }
 
-  Future<String> uploadToCloudinary(File file) async {
+  Future<String> uploadToFirebase(File file) async {
     setState(() {
       isUpdating = true;
     });
 
     String returnResult =
-        await Profile.uploadToCloudinary(context, file, cloudinary);
+        await Profile.uploadToFirebase(context, file, 'profile_pictures');
 
     setState(() {
       isUpdating = false;
@@ -252,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     File? profilePic = await Profile.pickFile();
                                     if (profilePic != null) {
                                       String _photoURL =
-                                          await uploadToCloudinary(profilePic);
+                                          await uploadToFirebase(profilePic);
                                       setState(() {
                                         tempURL = _photoURL;
                                       });
@@ -280,7 +278,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 children: [
                                   NeumorphicTextField(
                                     labelText: 'Name',
-                                    icon: Icon(Icons.person_outline_rounded,
+                                    icon: Icon(Icons.person_rounded,
                                         color: theme.variantColor),
                                     controller: _nameController,
                                   ),

@@ -16,7 +16,7 @@ import 'package:notes_app/widgets/text_field.dart';
 
 class CreateNoteScreen extends StatefulWidget {
   final Group group;
-  final Function refresh;
+  final Function(Note) refresh;
 
   const CreateNoteScreen({Key? key, required this.group, required this.refresh})
       : super(key: key);
@@ -26,7 +26,6 @@ class CreateNoteScreen extends StatefulWidget {
 }
 
 bool isUpdating = false;
-final cloudinary = CloudinaryPublic('quotenote', 'profile', cache: false);
 String tempURL = '';
 
 class _CreateNoteScreenState extends State<CreateNoteScreen> {
@@ -48,7 +47,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
     });
 
     String returnResult =
-        await Profile.uploadToCloudinary(context, file, cloudinary);
+        await Profile.uploadToFirebase(context, file, 'attachments');
 
     setState(() {
       isUpdating = false;
@@ -78,15 +77,6 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
         NeumorphicButton(
           child: Icon(Icons.arrow_back, color: theme.disabledColor),
           onPressed: () async {
-            if (tempURL != '') {
-              final response = await cloudinary.client!.delete(
-                Uri.parse(tempURL),
-              );
-              if (response.statusCode != 200) {
-                //Do something else
-              }
-            }
-
             Navigator.of(context).pop();
           },
           style: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
@@ -238,8 +228,8 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
 
                                         tempURL = '';
 
-                                        widget.group.notes.add(note);
-                                        widget.refresh();
+
+                                        widget.refresh(note);
 
                                         Navigator.of(context).pop();
                                       }

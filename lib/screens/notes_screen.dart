@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/utils/group.dart';
+import 'package:notes_app/utils/note.dart';
 import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
@@ -11,11 +12,11 @@ import 'create_note_screen.dart';
 import 'edit_group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
-  const NotesScreen({Key? key, required Group group})
+  NotesScreen({Key? key, required Group group})
       : _group = group,
         super(key: key);
 
-  final Group _group;
+  Group _group;
 
   @override
   _NotesScreenState createState() => _NotesScreenState();
@@ -31,9 +32,16 @@ class _NotesScreenState extends State<NotesScreen> {
     super.initState();
   }
 
-  void refresh(){
+  void addNote(Note note){
     setState(() {
-      _group = widget._group;
+      _group.notes.add(note);
+      //_group = widget._group;
+    });
+  }
+  void removeNote(Note note){
+    setState(() {
+      _group.notes.remove(note);
+      //_group = widget._group;
     });
   }
 
@@ -51,7 +59,7 @@ class _NotesScreenState extends State<NotesScreen> {
           ),
           onPressed: () {
             Navigator.of(context)
-                .push(Routes.routeTo(CreateNoteScreen(group: _group, refresh: refresh,)));
+                .push(Routes.routeTo(CreateNoteScreen(group: _group, refresh: addNote,)));
           },
           child: Icon(
             Icons.add,
@@ -125,6 +133,7 @@ class _NotesScreenState extends State<NotesScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: NeumorphicNote(
                         note: _group.notes[index],
+                        removeNote: removeNote,
                       ),
                     );
                   },

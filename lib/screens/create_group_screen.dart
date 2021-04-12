@@ -17,13 +17,13 @@ Group emptyGroup = Group(
     admins: [FirebaseAuth.instance.currentUser!],
     name: '',
     color: CustomColors.mint,
-    notes: List.empty());
+    notes: []);
 Group group = Group(
     type: '',
     admins: [FirebaseAuth.instance.currentUser!],
     name: '',
     color: CustomColors.mint,
-    notes: List.empty());
+    notes: []);
 
 class CreateGroupScreen extends StatefulWidget {
   final User user;
