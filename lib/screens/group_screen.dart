@@ -45,6 +45,12 @@ class GroupScreenState extends State<GroupScreen> {
     });
   }
 
+  removeGroup(Group group){
+    setState(() {
+      groups.remove(group);
+    });
+  }
+
   @override
   void initState() {
     _user = widget._user;
@@ -136,7 +142,7 @@ class GroupScreenState extends State<GroupScreen> {
                               color: groups[index].color,
                               onPressed: () => {
                                     Navigator.of(context).push(Routes.routeTo(
-                                        NotesScreen(group: groups[index])))
+                                        NotesScreen(group: groups[index], removeGroup: removeGroup,)))
                                   },
                               groupType: groups[index].type,
                               adminNames: groups[index].admins),

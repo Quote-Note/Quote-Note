@@ -8,10 +8,12 @@ import 'expanded_note.dart';
 
 class NeumorphicNote extends StatefulWidget {
   final Note note;
+  final Function(Note) removeNote;
 
   const NeumorphicNote({
     Key? key,
     required this.note,
+    required this.removeNote,
   }) : super(key: key);
 
   @override
@@ -34,7 +36,7 @@ class _NeumorphicNoteState extends State<NeumorphicNote> {
               openColor: theme.baseColor,
               middleColor: theme.baseColor,
               openBuilder: (context, action) {
-                return ExpandedNote(note: widget.note);
+                return ExpandedNote(note: widget.note, removeNote: widget.removeNote);
               },
               closedBuilder: (context, action) {
                 return ClosedNote(note: widget.note);

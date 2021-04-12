@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:notes_app/res/custom_colors.dart';
 import 'package:notes_app/utils/group.dart';
+import 'package:notes_app/utils/note.dart';
 import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
-import 'package:notes_app/widgets/notes/note.dart';
+import 'package:notes_app/widgets/notes/note_widget.dart';
 
 import 'create_note_screen.dart';
 import 'edit_group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
-  const NotesScreen({Key? key, required Group group})
-      : _group = group,
-        super(key: key);
 
-  final Group _group;
+  Group group;
+  Function(Group group) removeGroup;
+
+  NotesScreen({Key? key, required this.group, required this.removeGroup}) : super(key: key);
 
   @override
   _NotesScreenState createState() => _NotesScreenState();
@@ -26,14 +28,22 @@ class _NotesScreenState extends State<NotesScreen> {
 
   @override
   void initState() {
-    _group = widget._group;
+    _group = widget.group;
 
     super.initState();
   }
 
-  void refresh(){
+  void addNote(Note note) {
     setState(() {
-      _group = widget._group;
+      _group.notes.add(note);
+      //_group = widget._group;
+    });
+  }
+
+  void removeNote(Note note) {
+    setState(() {
+      _group.notes.remove(note);
+      //_group = widget._group;
     });
   }
 
@@ -50,8 +60,10 @@ class _NotesScreenState extends State<NotesScreen> {
             intensity: 1,
           ),
           onPressed: () {
-            Navigator.of(context)
-                .push(Routes.routeTo(CreateNoteScreen(group: _group, refresh: refresh,)));
+            Navigator.of(context).push(Routes.routeTo(CreateNoteScreen(
+              group: _group,
+              refresh: addNote,
+            )));
           },
           child: Icon(
             Icons.add,
@@ -72,6 +84,46 @@ class _NotesScreenState extends State<NotesScreen> {
             child: Icon(
               Icons.menu_rounded,
               color: theme.defaultTextColor,
+            ),
+          ),
+        ),
+        NeumorphicButton(
+          onPressed: () async {
+            return showDialog<void>(
+              context: context,
+              barrierDismissible: false, // user must tap button!
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: Text('Leave group?'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('Leave', style: TextStyle(color: CustomColors.red),),
+                      onPressed: () {
+                        widget.removeGroup(widget.group);
+                        Navigator.of(context).pop();
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Stay'),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                  ],
+                );
+              },
+            );
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.logout,
+              color: CustomColors.red,
             ),
           ),
         ),
@@ -125,6 +177,7 @@ class _NotesScreenState extends State<NotesScreen> {
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       child: NeumorphicNote(
                         note: _group.notes[index],
+                        removeNote: removeNote,
                       ),
                     );
                   },

@@ -1,11 +1,14 @@
 import 'dart:io';
 
-import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:path/path.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 import 'auth.dart';
+
+late FirebaseStorage firebaseStorage = FirebaseStorage.instance;
 
 class Profile{
 
@@ -20,41 +23,16 @@ class Profile{
     });
   }
 
-  static Future<String> uploadToCloudinary(BuildContext context, File file, CloudinaryPublic cloudinary) async {
-    String? url;
-    try {
-      CloudinaryResponse? response = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(file.path,
-            resourceType: CloudinaryResourceType.Image),
-      );
-      CloudinaryImage image = CloudinaryImage(response.secureUrl);
-      // Image optimisation
-      url = image
-          .transform()
-          .width(200)
-          .quality('auto:eco')
-          .crop('limit')
-          .generate();
+  static Future<String> uploadToFirebase(BuildContext context, File file, String folder) async {
 
-      ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customFeedbackSnackBar(
-              content: 'Uploaded profile picture',
-            ),
-          );
-    } on CloudinaryException catch (e) {
-      print(e.message);
-      print(e.request);
-      ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customErrorSnackBar(
-              content: e.message!,
-            ),
-          );
-    }
-    if (url != null) {
-      return url;
-    }
-    
-    return '';
+    String uId = FirebaseAuth.instance.currentUser!.uid;
+    String fileName = basename(file.path);
+    Reference reference = firebaseStorage.ref().child('$folder/$uId-${DateTime.now().millisecondsSinceEpoch}-$fileName'); // get a reference to the path of the image directory
+    print('uploading to firebase');
+    UploadTask uploadTask = reference.putFile(file); // put the file in the path
+    TaskSnapshot result = await uploadTask.whenComplete(() => null); // wait for the upload to complete
+    String url = await result.ref.getDownloadURL(); //retrieve the download link and return it
+    return url;
   }
 
   static Future<File?> pickFile() async {

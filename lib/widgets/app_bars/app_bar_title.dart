@@ -70,24 +70,6 @@ class _AppBarTitleState extends State<AppBarTitle> {
         SizedBox(
           width: 10,
         ),
-        NeumorphicButton(
-          onPressed: toggleAdmin,
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          padding: const EdgeInsets.all(5),
-          child: ClipOval(
-            child: isAdmin
-                ? Icon(Icons.star, color: Colors.yellow[400])
-                : Icon(Icons.star_border_outlined,
-                    color: theme.defaultTextColor),
-          ),
-        ),
-        SizedBox(
-          width: 10,
-        ),
       ],
     );
   }

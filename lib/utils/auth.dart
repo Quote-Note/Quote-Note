@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -37,10 +38,8 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => GroupScreen(
-            user: user,
-            key: context.widget.key
-          ),
+          builder: (context) =>
+              GroupScreen(user: user, key: context.widget.key),
         ),
       );
     }
@@ -50,6 +49,7 @@ class Authentication {
 
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore db = FirebaseFirestore.instance;
     User? user;
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -71,6 +71,9 @@ class Authentication {
             await auth.signInWithCredential(credential);
 
         user = userCredential.user;
+
+        CollectionReference users = db.collection('users');
+        users.add({'uid': user!.uid});
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -97,53 +100,56 @@ class Authentication {
     return user;
   }
 
-  static Future<User?> signUpWithEmail({required BuildContext context, email, password}) async {
+  static Future<User?> signUpWithEmail(
+      {required BuildContext context, email, password}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseFirestore db = FirebaseFirestore.instance;
     User? user;
     try {
       final UserCredential userCredential = await auth
           .createUserWithEmailAndPassword(email: email, password: password);
       user = userCredential.user;
+      CollectionReference users = db.collection('users');
+      users.add({'uid': user!.uid});
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customErrorSnackBar(
-              content: 'The password provided is too weak.',
-            ),
-          );
+          Authentication.customErrorSnackBar(
+            content: 'The password provided is too weak.',
+          ),
+        );
       } else if (e.code == 'email-already-in-use') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customErrorSnackBar(
-              content: 'The account already exists for that email.',
-            ),
-          );
+          Authentication.customErrorSnackBar(
+            content: 'The account already exists for that email.',
+          ),
+        );
       }
     }
     return user;
   }
 
-  static Future<User> signInWithEmail({required BuildContext context, email, password}) async {
+  static Future<User> signInWithEmail(
+      {required BuildContext context, email, password}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
-      UserCredential userCredential = await auth
-          .signInWithEmailAndPassword(
-              email: email,
-              password: password);
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
       user = userCredential.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customErrorSnackBar(
-              content: 'No user found for that email.',
-            ),
-          );
+          Authentication.customErrorSnackBar(
+            content: 'No user found for that email.',
+          ),
+        );
       } else if (e.code == 'wrong-password') {
         ScaffoldMessenger.of(context).showSnackBar(
-            Authentication.customErrorSnackBar(
-              content: 'Wrong password provided for that user.',
-            ),
-          );
+          Authentication.customErrorSnackBar(
+            content: 'Wrong password provided for that user.',
+          ),
+        );
       }
     }
     return user!;
