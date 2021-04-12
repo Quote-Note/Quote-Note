@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -39,15 +40,9 @@ class GroupScreenState extends State<GroupScreen> {
     'Blah blah blahadfghasdf gdfs dfg sdfhgd',
   ];
 
-  addGroup(Group group){
+  removeGroup(String groupID){
     setState(() {
-      groups.add(group);
-    });
-  }
-
-  removeGroup(Group group){
-    setState(() {
-      groups.remove(group);
+      print('test');
     });
   }
 
@@ -126,33 +121,52 @@ class GroupScreenState extends State<GroupScreen> {
                 flex: 6,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                  child: ListView.builder(
-                    addRepaintBoundaries: false,
-                    itemExtent: 300,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    clipBehavior: Clip.none,
-                    itemCount: groups.length + 2,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index < groups.length) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: NeumorphicCard(
-                              groupName: groups[index].name,
-                              color: groups[index].color,
-                              onPressed: () => {
-                                    Navigator.of(context).push(Routes.routeTo(
-                                        NotesScreen(group: groups[index], removeGroup: removeGroup,)))
-                                  },
-                              groupType: groups[index].type,
-                              adminNames: groups[index].admins),
-                        );
-                      } else if (index == groups.length + 1) {
-                        return CreateGroupCard(refresh: addGroup);
-                      } else {
-                        return JoinGroupCard();
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream:  FirebaseFirestore.instance.collection('group').snapshots(),
+                    builder: (context, snapshot) {
+                      int length = 0;
+                      if (snapshot.hasData) {
+                        length = snapshot.data!.docs.length;
                       }
-                    },
+                      return ListView.builder(
+                        addRepaintBoundaries: false,
+                        itemExtent: 300,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.horizontal,
+                        clipBehavior: Clip.none,
+                        itemCount: length + 2,
+                        itemBuilder: (BuildContext context, int index) {
+                          if (index < length) {
+                            var doc = snapshot.data!.docs[index];
+                            var group = Group(
+                              name: doc.get('name'),
+                              type: doc.get('type'),
+                              color: Color(doc.get('color')),
+                              noteIDs: doc.get('notes'),
+                              adminIDs: doc.get('admins'),
+                              roomCode: doc.get('roomCode'),
+                              id: doc.id
+                            );
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              child: NeumorphicCard(
+                                  groupName: group.name,
+                                  color: Color(doc.get('color')),
+                                  onPressed: () => {
+                                        Navigator.of(context).push(Routes.routeTo(
+                                            NotesScreen(group: group)))
+                                      },
+                                  groupType: group.type,
+                                  adminNames: group.adminIDs),
+                            );
+                          } else if (index == length + 1) {
+                            return CreateGroupCard();
+                          } else {
+                            return JoinGroupCard();
+                          }
+                        },
+                      );
+                    }
                   ),
                 ),
               ),

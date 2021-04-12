@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -5,7 +6,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class NeumorphicCard extends StatefulWidget {
   final String groupName;
   final String groupType;
-  final List<User> adminNames;
+  final List<dynamic> adminNames;
   final Color color;
   final Function()? onPressed;
   final Icon? icon;
@@ -25,6 +26,8 @@ class NeumorphicCard extends StatefulWidget {
 }
 
 class _NeumorphicCardState extends State<NeumorphicCard> {
+
+  
   @override
   Widget build(BuildContext context) {
     return widget.onPressed != null
@@ -40,7 +43,7 @@ class _NeumorphicCardState extends State<NeumorphicCard> {
                 groupName: widget.groupName,
                 groupType: widget.groupType,
                 color: widget.color,
-                adminNames: widget.adminNames,
+                adminIDs: widget.adminNames,
                 icon: widget.icon),
           )
         : Neumorphic(
@@ -54,15 +57,15 @@ class _NeumorphicCardState extends State<NeumorphicCard> {
                 groupName: widget.groupName,
                 groupType: widget.groupType,
                 color: widget.color,
-                adminNames: widget.adminNames,
+                adminIDs: widget.adminNames,
                 icon: widget.icon));
   }
 }
 
-class CardContent extends StatelessWidget {
+class CardContent extends StatefulWidget {
   final String groupName;
   final String groupType;
-  final List<User> adminNames;
+  final List<dynamic> adminIDs;
   final Color color;
   final Icon? icon;
 
@@ -71,25 +74,34 @@ class CardContent extends StatelessWidget {
     required this.groupName,
     required this.color,
     required this.groupType,
-    required this.adminNames,
+    required this.adminIDs,
     this.icon,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    final theme = NeumorphicTheme.currentTheme(context);
+  _CardContentState createState() => _CardContentState();
+}
 
-    String convertToNames() {
+class _CardContentState extends State<CardContent> {
+
+  String names = '';
+
+  Future<String> convertToNames() async {
       List<String> names = [];
-      adminNames.forEach((element) {
-        names.add((element.displayName != null
-            ? element.displayName
-            : element.email
-                .toString()
-                .substring(0, element.email.toString().indexOf('@')))!);
-      });
+      QuerySnapshot users = await FirebaseFirestore.instance.collection('users').where('uid', whereIn: widget.adminIDs).get();
+      List<DocumentSnapshot> documents = users.docs;
+        documents.forEach((snapshot) {names.add(snapshot.get('display_name'));});
       return names.join(' & ');
     }
+
+  @override
+  initState() { 
+    convertToNames().then((String result) => names = result);
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    final theme = NeumorphicTheme.currentTheme(context);
 
     return Flex(
       direction: Axis.vertical,
@@ -98,9 +110,9 @@ class CardContent extends StatelessWidget {
           height: 168,
           width: 282,
           decoration: BoxDecoration(
-            color: color,
+            color: widget.color,
           ),
-          child: icon != null ? icon : Container(),
+          child: widget.icon != null ? widget.icon : Container(),
         ),
         Expanded(
           child: Container(
@@ -114,9 +126,9 @@ class CardContent extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   SizedBox(height: 10),
-                  Text(groupType, style: TextStyle(color: color)),
+                  Text(widget.groupType, style: TextStyle(color: widget.color)),
                   Text(
-                    groupName,
+                    widget.groupName,
                     style: TextStyle(
                       color: theme.defaultTextColor,
                       fontSize: 24,
@@ -124,7 +136,7 @@ class CardContent extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    convertToNames(),
+                    names,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: theme.variantColor,

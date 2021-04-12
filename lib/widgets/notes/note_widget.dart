@@ -8,7 +8,7 @@ import 'expanded_note.dart';
 
 class NeumorphicNote extends StatefulWidget {
   final Note note;
-  final Function(Note) removeNote;
+  final Function(String) removeNote;
 
   const NeumorphicNote({
     Key? key,

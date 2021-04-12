@@ -1,35 +1,32 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:nanoid/async.dart';
 import 'package:notes_app/res/custom_colors.dart';
-import 'package:notes_app/screens/group_screen.dart';
 import 'package:notes_app/utils/color_picker.dart';
 import 'package:notes_app/utils/group.dart';
-import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_title.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
+import 'package:uuid/uuid.dart';
 
-Group emptyGroup = Group(
+final Group emptyGroup = Group(
     type: '',
-    admins: [FirebaseAuth.instance.currentUser!],
+    adminIDs: [FirebaseAuth.instance.currentUser!.uid],
     name: '',
     color: CustomColors.mint,
-    notes: []);
-Group group = Group(
-    type: '',
-    admins: [FirebaseAuth.instance.currentUser!],
-    name: '',
-    color: CustomColors.mint,
-    notes: []);
+    id: Uuid().v4(),
+    roomCode: '',
+    noteIDs: []);
+Group group = emptyGroup;
 
 class CreateGroupScreen extends StatefulWidget {
   final User user;
-  final Function(Group group) refresh;
 
-  const CreateGroupScreen({Key? key, required this.user, required this.refresh}) : super(key: key);
+  const CreateGroupScreen({Key? key, required this.user}) : super(key: key);
 
   @override
   _CreateGroupScreenState createState() => _CreateGroupScreenState();
@@ -211,12 +208,40 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 text: 'Create group',
                                 color: group.color,
                                 textColor: CustomColors.nightBG,
-                                onPressed: () {
+                                onPressed: () async {
                                   if (_formKey.currentState!.validate()) {
                                     group.name = _nameController.value.text;
                                     group.type = _typeController.value.text;
+                                    group.id = Uuid().v4();
+                                    group.roomCode = await customAlphabet(
+                                        '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                                        6);
+                                    var db = FirebaseFirestore.instance;
+                                    var userID =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    var groupDoc =
+                                        db.collection('group').doc(group.id);
+                                    var users = db.doc('users/$userID');
 
-                                    widget.refresh(group);
+                                    final batch = db.batch();
+
+                                    batch.set(groupDoc, {
+                                      'admins': [userID],
+                                      'members': [userID],
+                                      'color': group.color.value,
+                                      'name': group.name,
+                                      'notes': [],
+                                      'roomCode': group.roomCode,
+                                      'type': group.type
+                                    });
+
+                                    batch.update(users, {
+                                      'group':
+                                          FieldValue.arrayUnion([group.id]),
+                                    });
+
+                                    batch.commit().then(
+                                        (value) => print('Added to database'));
 
                                     group = emptyGroup;
                                   }

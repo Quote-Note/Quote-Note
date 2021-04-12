@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -13,11 +14,10 @@ import 'create_note_screen.dart';
 import 'edit_group_screen.dart';
 
 class NotesScreen extends StatefulWidget {
-
   Group group;
-  Function(Group group) removeGroup;
+  //Function(String) removeGroup;
 
-  NotesScreen({Key? key, required this.group, required this.removeGroup}) : super(key: key);
+  NotesScreen({Key? key, required this.group}) : super(key: key);
 
   @override
   _NotesScreenState createState() => _NotesScreenState();
@@ -33,18 +33,18 @@ class _NotesScreenState extends State<NotesScreen> {
     super.initState();
   }
 
-  void addNote(Note note) {
-    setState(() {
-      _group.notes.add(note);
-      //_group = widget._group;
-    });
+  void removeNote(String noteID) {
+    setState(() {});
   }
 
-  void removeNote(Note note) {
-    setState(() {
-      _group.notes.remove(note);
-      //_group = widget._group;
-    });
+  Future<String> getUserName(String userID) async {
+    QuerySnapshot user;
+    user = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: userID)
+        .get();
+    DocumentSnapshot documents = user.docs[0];
+    return documents.get('display_name');
   }
 
   @override
@@ -62,7 +62,6 @@ class _NotesScreenState extends State<NotesScreen> {
           onPressed: () {
             Navigator.of(context).push(Routes.routeTo(CreateNoteScreen(
               group: _group,
-              refresh: addNote,
             )));
           },
           child: Icon(
@@ -87,7 +86,7 @@ class _NotesScreenState extends State<NotesScreen> {
             ),
           ),
         ),
-        NeumorphicButton(
+        /* NeumorphicButton(
           onPressed: () async {
             return showDialog<void>(
               context: context,
@@ -99,7 +98,7 @@ class _NotesScreenState extends State<NotesScreen> {
                     TextButton(
                       child: Text('Leave', style: TextStyle(color: CustomColors.red),),
                       onPressed: () {
-                        widget.removeGroup(widget.group);
+                        //widget.removeGroup(widget.group.id);
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
                       },
@@ -126,7 +125,7 @@ class _NotesScreenState extends State<NotesScreen> {
               color: CustomColors.red,
             ),
           ),
-        ),
+        ), */
         NeumorphicButton(
           onPressed: () async {
             Navigator.of(context).pop();
@@ -165,23 +164,42 @@ class _NotesScreenState extends State<NotesScreen> {
             direction: Axis.vertical,
             children: [
               Expanded(
-                child: ListView.builder(
-                  clipBehavior: Clip.antiAlias,
-                  scrollDirection: Axis.vertical,
-                  itemCount: _group.notes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    //Sorts by most recent
-                    _group.notes
-                        .sort((a, b) => b.timestamp.compareTo(a.timestamp));
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      child: NeumorphicNote(
-                        note: _group.notes[index],
-                        removeNote: removeNote,
-                      ),
-                    );
-                  },
-                ),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('notes').orderBy('timestamp',descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      int length = 0;
+                      if (snapshot.hasData) {
+                        length = snapshot.data!.docs.length;
+                      }
+                      return ListView.builder(
+                        clipBehavior: Clip.antiAlias,
+                        scrollDirection: Axis.vertical,
+                        itemCount: length,
+                        itemBuilder: (BuildContext context, int index) {
+                          var doc = snapshot.data!.docs[index];
+
+                          Timestamp timestamp = doc.get('timestamp');
+                          var note = Note(
+                            title: doc.get('title'),
+                            body: doc.get('note'),
+                            author: '',
+                            id: doc.id,
+                            group: _group,
+                            attachmentURL: '',
+                            timestamp: timestamp.toDate(),
+                          );
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                            child: NeumorphicNote(
+                              note: note,
+                              removeNote: removeNote,
+                            ),
+                          );
+                        },
+                      );
+                    }),
               ),
             ],
           ),

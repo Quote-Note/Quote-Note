@@ -47,9 +47,17 @@ class Authentication {
     return firebaseApp;
   }
 
+  static Future<void> updateDatabase(User user) async {
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference users = db.collection('users');
+    var doc = await users.doc(user.uid).get();
+    if(!doc.exists){
+      users.doc(user.uid).set({'uid': user.uid, 'display_name': user.displayName});
+    }
+  }
+
   static Future<User?> signInWithGoogle({required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    FirebaseFirestore db = FirebaseFirestore.instance;
     User? user;
 
     final GoogleSignIn googleSignIn = GoogleSignIn();
@@ -71,9 +79,8 @@ class Authentication {
             await auth.signInWithCredential(credential);
 
         user = userCredential.user;
+        updateDatabase(user!);
 
-        CollectionReference users = db.collection('users');
-        users.add({'uid': user!.uid});
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -103,14 +110,12 @@ class Authentication {
   static Future<User?> signUpWithEmail(
       {required BuildContext context, email, password}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
-    FirebaseFirestore db = FirebaseFirestore.instance;
     User? user;
     try {
       final UserCredential userCredential = await auth
           .createUserWithEmailAndPassword(email: email, password: password);
       user = userCredential.user;
-      CollectionReference users = db.collection('users');
-      users.add({'uid': user!.uid});
+      updateDatabase(user!);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         ScaffoldMessenger.of(context).showSnackBar(

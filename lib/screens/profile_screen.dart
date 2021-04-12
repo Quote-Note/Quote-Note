@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -96,6 +97,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .then((value) => {imageCache!.clearLiveImages()})
           .then((value) => {_user = FirebaseAuth.instance.currentUser!});
     });
+
+    FirebaseFirestore db = FirebaseFirestore.instance;
+    CollectionReference users = db.collection('users');
+
+    users.doc(_user.uid).set({'display_name': _user.displayName});
 
     ScaffoldMessenger.of(context).showSnackBar(
       Authentication.customFeedbackSnackBar(
