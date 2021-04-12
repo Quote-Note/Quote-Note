@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -221,10 +223,12 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                                                   null
                                               ? FirebaseAuth.instance
                                                   .currentUser!.displayName
-                                              : '')!,
+                                              : '')!, //TODO Add email fallback
                                           timestamp: DateTime.now(),
                                           attachmentURL: tempURL,
                                         );
+
+                                        var db = FirebaseFirestore.instance;
 
                                         tempURL = '';
 
