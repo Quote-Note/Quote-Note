@@ -1,13 +1,12 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
+import 'package:notes_app/screens/create_group_screen.dart';
 import 'package:notes_app/utils/group.dart';
 import 'package:notes_app/utils/note.dart';
 import 'package:notes_app/utils/profile.dart';
@@ -15,17 +14,26 @@ import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateNoteScreen extends StatefulWidget {
   final Group group;
-  final Function(Note) refresh;
 
-  const CreateNoteScreen({Key? key, required this.group, required this.refresh})
-      : super(key: key);
+  const CreateNoteScreen({Key? key, required this.group}) : super(key: key);
 
   @override
   _CreateNoteScreenState createState() => _CreateNoteScreenState();
 }
+
+final Note emptyNote = Note(
+    title: '',
+    body: '',
+    author: FirebaseAuth.instance.currentUser!.displayName!,
+    timestamp: DateTime.now(),
+    group: emptyGroup,
+    attachmentURL: tempURL,
+    id: Uuid().v4());
+Note note = emptyNote;
 
 bool isUpdating = false;
 String tempURL = '';
@@ -213,27 +221,50 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
                                   if (!isUpdating) {
                                     setState(() {
                                       if (_formKey.currentState!.validate()) {
-                                        Note note = Note(
-                                          title: _titleController.value.text,
-                                          body: _noteController.value.text,
-                                          author: (FirebaseAuth
-                                                      .instance
-                                                      .currentUser!
-                                                      .displayName !=
-                                                  null
-                                              ? FirebaseAuth.instance
-                                                  .currentUser!.displayName
-                                              : '')!, //TODO Add email fallback
-                                          timestamp: DateTime.now(),
-                                          attachmentURL: tempURL,
-                                        );
+                                        note.note = _noteController.value.text;
+                                        note.title =
+                                            _titleController.value.text;
+                                        note.attachmentURL = tempURL;
+                                        note.id = Uuid().v4();
 
                                         var db = FirebaseFirestore.instance;
+                                        var userID = FirebaseAuth
+                                            .instance.currentUser!.uid;
+                                        var groupDoc = db
+                                            .collection('group')
+                                            .doc(widget.group.id);
+                                        var users = db.doc('users/$userID');
+                                        var notes =
+                                            db.collection('notes').doc(note.id);
+
+                                        final batch = db.batch();
+
+                                        batch.update(groupDoc, {
+                                          'notes':
+                                              FieldValue.arrayUnion([note.id])
+                                        });
+
+                                        batch.update(users, {
+                                          'notes':
+                                              FieldValue.arrayUnion([note.id]),
+                                        });
+
+                                        batch.set(notes, {
+                                          'authorID': userID,
+                                          'note': _noteController.value.text,
+                                          'timestamp':
+                                              FieldValue.serverTimestamp(),
+                                          'title': note.title,
+                                          'groupID': widget.group.id,
+                                          'attachmentURL': note.attachmentURL
+                                        });
+
+                                        batch.commit().then((value) =>
+                                            print('Added to database'));
 
                                         tempURL = '';
 
-
-                                        widget.refresh(note);
+                                        note = emptyNote;
 
                                         Navigator.of(context).pop();
                                       }

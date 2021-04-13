@@ -52,7 +52,7 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
                           padding: const EdgeInsets.symmetric(horizontal: 30.0),
                           child: ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: widget.numberOfNotes,
+                            itemCount: widget.notes.length,
                             itemBuilder: (BuildContext context, int index) {
                               return Padding(
                                 padding: const EdgeInsets.symmetric(vertical: 4.0),

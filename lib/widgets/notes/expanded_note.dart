@@ -10,7 +10,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class ExpandedNote extends StatelessWidget {
   final Note note;
-  final Function(Note) removeNote;
+  final Function(String) removeNote;
   const ExpandedNote({required this.note, required this.removeNote});
 
   @override
@@ -31,7 +31,7 @@ class ExpandedNote extends StatelessWidget {
       bottomNavigationBar: AppBarBottom(
         buttons: [NeumorphicButton(
           onPressed: () async {
-            removeNote(note);
+            removeNote(note.id);
             Navigator.of(context).pop();
           },
           style: NeumorphicStyle(
@@ -154,8 +154,8 @@ class ExpandedNote extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: theme.disabledColor,
                           ),
-                          child: note.attachmentURL != '' ? Image.network(
-                                            note.attachmentURL!,
+                          child: note.attachmentURL.isNotEmpty ? Image.network(
+                                            note.attachmentURL,
                                             key:
                                                 UniqueKey(),
                                             scale: 1,

@@ -9,10 +9,8 @@ import 'package:notes_app/utils/group.dart';
 import 'card.dart';
 
 class CreateGroupCard extends StatelessWidget {
-  final Function(Group group) refresh;
   CreateGroupCard({
     Key? key,
-    required this.refresh,
   }) : super(key: key);
 
   
@@ -31,7 +29,6 @@ class CreateGroupCard extends StatelessWidget {
               MaterialPageRoute(
                 builder: (context) => CreateGroupScreen(
                   user: FirebaseAuth.instance.currentUser!,
-                  refresh: refresh,
                   key: key,
                 ),
               ),
