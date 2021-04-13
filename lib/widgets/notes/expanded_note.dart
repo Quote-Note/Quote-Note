@@ -111,7 +111,7 @@ class ExpandedNote extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      note.author,
+                                      note.authorID,
                                       style: TextStyle(
                                         color: theme.variantColor,
                                         fontSize: 14,

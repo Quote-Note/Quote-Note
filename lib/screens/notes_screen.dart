@@ -158,51 +158,54 @@ class _NotesScreenState extends State<NotesScreen> {
         ),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          child: Flex(
-            direction: Axis.vertical,
-            children: [
-              Expanded(
-                child: StreamBuilder<QuerySnapshot>(
-                    stream: FirebaseFirestore.instance
-                        .collection('notes').where('groupID', isEqualTo: _group.id).orderBy('timestamp',descending: true)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      int length = 0;
-                      if (snapshot.hasData) {
-                        length = snapshot.data!.docs.length;
-                      }
-                      return ListView.builder(
-                        clipBehavior: Clip.antiAlias,
-                        scrollDirection: Axis.vertical,
-                        itemCount: length,
-                        itemBuilder: (BuildContext context, int index) {
-                          var doc = snapshot.data!.docs[index];
+        child: Flex(
+          direction: Axis.vertical,
+          children: [
+            Expanded(
+              child: StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('notes')
+                      .where('groupID', isEqualTo: _group.id)
+                      .orderBy('timestamp', descending: true)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    int length = 0;
+                    if (snapshot.hasData) {
+                      length = snapshot.data!.docs.length;
+                    }
+                    
+                    return ListView.builder(
+                      clipBehavior: Clip.antiAlias,
+                      scrollDirection: Axis.vertical,
+                      itemCount: length,
+                      itemBuilder: (BuildContext context, int index) {
+                        var doc = snapshot.data!.docs[index];
 
-                          Timestamp timestamp = doc.get('timestamp') ?? Timestamp.now();
-                          var note = Note(
-                            title: doc.get('title'),
-                            body: doc.get('note'),
-                            author: '',
-                            id: doc.id,
-                            group: _group,
-                            attachmentURL: '',
-                            timestamp: timestamp.toDate(),
-                          );
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: NeumorphicNote(
-                              note: note,
-                              removeNote: removeNote,
-                            ),
-                          );
-                        },
-                      );
-                    }),
-              ),
-            ],
-          ),
+                        Timestamp timestamp =
+                            doc.get('timestamp') ?? Timestamp.now();
+                        
+
+                        var note = Note(
+                          title: doc.get('title'),
+                          body: doc.get('note'),
+                          authorID: doc.get('authorID'),
+                          id: doc.id,
+                          group: _group,
+                          attachmentURL: '',
+                          timestamp: timestamp.toDate(),
+                        );
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+                          child: NeumorphicNote(
+                            note: note,
+                            removeNote: removeNote,
+                          ),
+                        );
+                      },
+                    );
+                  }),
+            ),
+          ],
         ),
       ),
     );

@@ -34,12 +34,13 @@ class GroupScreenState extends State<GroupScreen> {
   List<String> notes = [];
 
   getRecentNotes() async {
+    
     List<String> recentNotes = [];
     List<String> groupIDs = [];
 
     notes.clear();
     
-    var groupResult = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('group')
         .where('members', arrayContains: _user.uid)
         .get()
@@ -49,23 +50,30 @@ class GroupScreenState extends State<GroupScreen> {
       });
     });
 
-    var result = await FirebaseFirestore.instance
+    await FirebaseFirestore.instance
         .collection('notes')
         .where('groupID', whereIn: groupIDs)
+        .orderBy('timestamp', descending: true)
         .get()
         .then((value) {
           //print('data: $value');
       value.docs.forEach((element) {
         var data = element.data();
-        recentNotes.add(data!['note']);
+        var note = data!['title'];
+        if(note.isNotEmpty){
+          recentNotes.add(note);
+        }
       });
     });
-    if(recentNotes.length <= 2){
+    print("data: $recentNotes");
+    if(recentNotes.length <= 4){
       notes = recentNotes;
     } else {
-      notes = recentNotes.take(3).toList();
-    }
-    
+      notes = recentNotes.take(4).toList();
+    }    
+    setState(() {
+      print('test');
+    });
   }
 
   removeGroup(String groupID) {
