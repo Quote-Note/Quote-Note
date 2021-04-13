@@ -21,9 +21,7 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
   @override
   Widget build(BuildContext context) {
     final theme = NeumorphicTheme.currentTheme(context);
-    return SizedBox(
-      height: 174,
-      width: 343,
+    return Container(
       child: Neumorphic(
         style: NeumorphicStyle(
           boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(30)),
@@ -33,7 +31,7 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
         child: Flex(
           direction: Axis.vertical,
           children: [
-            SizedBox(height: 10),
+            SizedBox(height: 10, width: MediaQuery.of(context).size.width,),
             Text(
               widget.title,
               style: TextStyle(
@@ -48,22 +46,24 @@ class _NeumorphicNoteOverviewState extends State<NeumorphicNoteOverview> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                child: widget.notes.length > 0 ?ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: widget.notes.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(
-                        widget.notes[index],
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: theme.variantColor,
-                        ),
-                      ),
-                    );
-                  },
-                ) : Text('No recent notes'),
+                child: widget.notes.length > 0
+                    ? ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: widget.notes.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Text(
+                              widget.notes[index],
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                color: theme.variantColor,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Text('No recent notes'),
               ),
             ),
             SizedBox(height: 30),

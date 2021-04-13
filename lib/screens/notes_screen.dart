@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -34,7 +35,11 @@ class _NotesScreenState extends State<NotesScreen> {
   }
 
   void removeNote(String noteID) {
-    setState(() {});
+    setState(() {
+      FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).update({'notes': FieldValue.arrayRemove([noteID])});
+      FirebaseFirestore.instance.collection('group').doc(widget.group.id).update({'notes': FieldValue.arrayRemove([noteID])});
+      FirebaseFirestore.instance.collection('notes').doc(noteID).delete();
+    });
   }
 
   Future<String> getUserName(String userID) async {
@@ -183,7 +188,6 @@ class _NotesScreenState extends State<NotesScreen> {
 
                         Timestamp timestamp =
                             doc.get('timestamp') ?? Timestamp.now();
-                        
 
                         var note = Note(
                           title: doc.get('title'),

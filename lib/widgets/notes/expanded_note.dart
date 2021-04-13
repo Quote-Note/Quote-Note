@@ -1,4 +1,4 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -7,11 +7,22 @@ import 'package:notes_app/widgets/app_bars/app_bar_note.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-
 class ExpandedNote extends StatelessWidget {
   final Note note;
   final Function(String) removeNote;
-  const ExpandedNote({required this.note, required this.removeNote});
+  ExpandedNote({required this.note, required this.removeNote});
+
+  String username = '';
+
+  getUsername() async {
+    await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: note.authorID)
+        .get()
+        .then((value) {
+      username = value.docs.first.data()!['display_name'];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +32,9 @@ class ExpandedNote extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(60.0),
         child: AppBar(
-          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light ? Brightness.light : Brightness.dark,
+          brightness: NeumorphicTheme.of(context)!.themeMode == ThemeMode.light
+              ? Brightness.light
+              : Brightness.dark,
           automaticallyImplyLeading: false,
           elevation: 0,
           backgroundColor: theme.baseColor,
@@ -29,39 +42,41 @@ class ExpandedNote extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: AppBarBottom(
-        buttons: [NeumorphicButton(
-          onPressed: () async {
-            removeNote(note.id);
-            Navigator.of(context).pop();
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          child: ClipOval(
-            child: Icon(
-              Icons.delete,
-              color: theme.defaultTextColor,
+        buttons: [
+          NeumorphicButton(
+            onPressed: () async {
+              removeNote(note.id);
+              Navigator.of(context).pop();
+            },
+            style: NeumorphicStyle(
+              depth: 3,
+              intensity: 1,
+              boxShape: NeumorphicBoxShape.circle(),
+            ),
+            child: ClipOval(
+              child: Icon(
+                Icons.delete,
+                color: theme.defaultTextColor,
+              ),
             ),
           ),
-        ),
-        NeumorphicButton(
-          onPressed: () async {
-            Navigator.of(context).pop();
-          },
-          style: NeumorphicStyle(
-            depth: 3,
-            intensity: 1,
-            boxShape: NeumorphicBoxShape.circle(),
-          ),
-          child: ClipOval(
-            child: Icon(
-              Icons.arrow_back,
-              color: theme.disabledColor,
+          NeumorphicButton(
+            onPressed: () async {
+              Navigator.of(context).pop();
+            },
+            style: NeumorphicStyle(
+              depth: 3,
+              intensity: 1,
+              boxShape: NeumorphicBoxShape.circle(),
+            ),
+            child: ClipOval(
+              child: Icon(
+                Icons.arrow_back,
+                color: theme.disabledColor,
+              ),
             ),
           ),
-        ),],
+        ],
       ),
       body: SafeArea(
         child: Padding(
@@ -110,12 +125,17 @@ class ExpandedNote extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Text(
-                                      note.authorID,
-                                      style: TextStyle(
-                                        color: theme.variantColor,
-                                        fontSize: 14,
-                                      ),
+                                    FutureBuilder(
+                                      future: getUsername(),
+                                      builder: (context, snapshot) {
+                                        return Text(
+                                          username,
+                                          style: TextStyle(
+                                            color: theme.variantColor,
+                                            fontSize: 14,
+                                          ),
+                                        );
+                                      },
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(
@@ -154,13 +174,14 @@ class ExpandedNote extends StatelessWidget {
                           decoration: BoxDecoration(
                             color: theme.disabledColor,
                           ),
-                          child: note.attachmentURL.isNotEmpty ? Image.network(
-                                            note.attachmentURL,
-                                            key:
-                                                UniqueKey(),
-                                            scale: 1,
-                                            fit: BoxFit.cover,
-                                          ): Container(),
+                          child: note.attachmentURL.isNotEmpty
+                              ? Image.network(
+                                  note.attachmentURL,
+                                  key: UniqueKey(),
+                                  scale: 1,
+                                  fit: BoxFit.cover,
+                                )
+                              : Container(),
                         ),
                       ),
                     ],

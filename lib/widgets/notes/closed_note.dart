@@ -47,10 +47,11 @@ class ClosedNote extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: theme.defaultTextColor,
-                fontSize: 16,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

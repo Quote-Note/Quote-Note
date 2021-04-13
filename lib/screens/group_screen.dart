@@ -34,45 +34,43 @@ class GroupScreenState extends State<GroupScreen> {
   List<String> notes = [];
 
   getRecentNotes() async {
-    
-    List<String> recentNotes = [];
-    List<String> groupIDs = [];
+    setState(() async {
+      List<String> recentNotes = [];
+      List<String> groupIDs = [];
 
-    notes.clear();
-    
-    await FirebaseFirestore.instance
-        .collection('group')
-        .where('members', arrayContains: _user.uid)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        groupIDs.add(element.id);
-      });
-    });
+      notes.clear();
 
-    await FirebaseFirestore.instance
-        .collection('notes')
-        .where('groupID', whereIn: groupIDs)
-        .orderBy('timestamp', descending: true)
-        .get()
-        .then((value) {
-          //print('data: $value');
-      value.docs.forEach((element) {
-        var data = element.data();
-        var note = data!['title'];
-        if(note.isNotEmpty){
-          recentNotes.add(note);
-        }
+      await FirebaseFirestore.instance
+          .collection('group')
+          .where('members', arrayContains: _user.uid)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          groupIDs.add(element.id);
+        });
       });
-    });
-    print("data: $recentNotes");
-    if(recentNotes.length <= 4){
-      notes = recentNotes;
-    } else {
-      notes = recentNotes.take(4).toList();
-    }    
-    setState(() {
-      print('test');
+
+      await FirebaseFirestore.instance
+          .collection('notes')
+          .where('groupID', whereIn: groupIDs)
+          .orderBy('timestamp', descending: true)
+          .get()
+          .then((value) {
+        //print('data: $value');
+        value.docs.forEach((element) {
+          var data = element.data();
+          var note = data!['title'];
+          if (note.isNotEmpty) {
+            recentNotes.add(note);
+          }
+        });
+      });
+      print("data: $recentNotes");
+      if (recentNotes.length <= 4) {
+        notes = recentNotes;
+      } else {
+        notes = recentNotes.take(4).toList();
+      }
     });
   }
 
@@ -161,7 +159,8 @@ class GroupScreenState extends State<GroupScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection('group').where('members', arrayContains: _user.uid)
+                          .collection('group')
+                          .where('members', arrayContains: _user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         int length = 0;
