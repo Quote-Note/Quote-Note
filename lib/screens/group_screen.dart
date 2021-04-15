@@ -33,39 +33,43 @@ class GroupScreenState extends State<GroupScreen> {
 
   List<String> notes = [];
 
-  getRecentNotes() async {
-    List<String> recentNotes = [];
-    List<String> groupIDs = [];
+  Future<List<String>> getRecentNotes() async {
+      List<String> recentNotes = [];
+      List<String> groupIDs = [];
 
-    notes.clear();
-    
-    var groupResult = await FirebaseFirestore.instance
-        .collection('group')
-        .where('members', arrayContains: _user.uid)
-        .get()
-        .then((value) {
-      value.docs.forEach((element) {
-        groupIDs.add(element.id);
-      });
-    });
+      notes.clear();
 
-    var result = await FirebaseFirestore.instance
-        .collection('notes')
-        .where('groupID', whereIn: groupIDs)
-        .get()
-        .then((value) {
-          //print('data: $value');
-      value.docs.forEach((element) {
-        var data = element.data();
-        recentNotes.add(data!['note']);
+      await FirebaseFirestore.instance
+          .collection('group')
+          .where('members', arrayContains: _user.uid)
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          groupIDs.add(element.id);
+        });
       });
-    });
-    if(recentNotes.length <= 2){
-      notes = recentNotes;
-    } else {
-      notes = recentNotes.take(3).toList();
-    }
-    
+
+      await FirebaseFirestore.instance
+          .collection('notes')
+          .where('groupID', whereIn: groupIDs)
+          .orderBy('timestamp', descending: true)
+          .get()
+          .then((value) {
+        //print('data: $value');
+        value.docs.forEach((element) {
+          var data = element.data();
+          var note = data!['title'];
+          if (note.isNotEmpty) {
+            recentNotes.add(note);
+          }
+        });
+      });
+      if (recentNotes.length <= 4) {
+        notes = recentNotes;
+      } else {
+        recentNotes = recentNotes.take(4).toList();
+      }
+    return recentNotes;
   }
 
   removeGroup(String groupID) {
@@ -103,6 +107,22 @@ class GroupScreenState extends State<GroupScreen> {
           child: ClipOval(
             child: Icon(
               Icons.person_rounded,
+              color: theme.defaultTextColor,
+            ),
+          ),
+        ),
+        NeumorphicButton(
+          onPressed: () => {
+            setState(() {})
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.refresh,
               color: theme.defaultTextColor,
             ),
           ),
@@ -153,7 +173,8 @@ class GroupScreenState extends State<GroupScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 30.0),
                   child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
-                          .collection('group').where('members', arrayContains: _user.uid)
+                          .collection('group')
+                          .where('members', arrayContains: _user.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         int length = 0;
@@ -206,11 +227,16 @@ class GroupScreenState extends State<GroupScreen> {
                 flex: 4,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
-                  child: NeumorphicNoteOverview(
-                    title: 'New Notes',
-                    notes: notes,
-                    numberOfNotes: 3,
-                  ),
+                  child: FutureBuilder(
+                      future: getRecentNotes(),
+                      initialData: ['Getting recent notes..'],
+                      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                        return NeumorphicNoteOverview(
+                          title: 'New Notes',
+                          notes: snapshot.data??[],
+                          numberOfNotes: 3,
+                        );
+                      }),
                 ),
               ),
             ],

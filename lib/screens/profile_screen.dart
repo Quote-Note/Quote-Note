@@ -193,91 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                NeumorphicButton(
-                                  onPressed: () {
-                                    toggleNightMode(context);
-                                  },
-                                  style: NeumorphicStyle(
-                                    depth: 3,
-                                    intensity: 1,
-                                    boxShape: NeumorphicBoxShape.circle(),
-                                  ),
-                                  padding: const EdgeInsets.all(10),
-                                  child: ClipOval(
-                                    child: Icon(
-                                      Icons.brightness_medium,
-                                      color: theme.defaultTextColor,
-                                      size: 25,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                Neumorphic(
-                                  style: NeumorphicStyle(
-                                    depth: 3,
-                                    intensity: 1,
-                                    boxShape: NeumorphicBoxShape.circle(),
-                                  ),
-                                  padding: const EdgeInsets.all(5),
-                                  child: SizedBox(
-                                    width: 100,
-                                    height: 100,
-                                    child: !isUpdating
-                                        ? ClipOval(
-                                            child: tempURL != ''
-                                                ? Image.network(
-                                                    tempURL,
-                                                    key: UniqueKey(),
-                                                    scale: 1,
-                                                    fit: BoxFit.fitWidth,
-                                                  )
-                                                : Icon(
-                                                    Icons.person,
-                                                    color:
-                                                        theme.defaultTextColor,
-                                                    size: 100,
-                                                  ),
-                                          )
-                                        : CircularProgressIndicator(),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: 20,
-                                ),
-                                // File picker
-                                NeumorphicButton(
-                                  onPressed: () async {
-                                    File? profilePic = await Profile.pickFile();
-                                    if (profilePic != null) {
-                                      String _photoURL =
-                                          await uploadToFirebase(profilePic);
-                                      setState(() {
-                                        tempURL = _photoURL;
-                                      });
-                                    }
-                                  },
-                                  style: NeumorphicStyle(
-                                    depth: 3,
-                                    intensity: 1,
-                                    boxShape: NeumorphicBoxShape.circle(),
-                                  ),
-                                  padding: const EdgeInsets.all(10),
-                                  child: ClipOval(
-                                    child: Icon(
-                                      Icons.edit,
-                                      color: theme.defaultTextColor,
-                                      size: 25,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            ProfileTopHalf(theme: theme, parent: this),
                             Form(
                               key: _formKey,
                               child: Column(
@@ -347,6 +263,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ),
       ),
+    );
+  }
+}
+
+class ProfileTopHalf extends StatelessWidget {
+  const ProfileTopHalf({
+    Key? key,
+    required this.theme,
+    required this.parent,
+  }) : super(key: key);
+
+  final _ProfileScreenState parent;
+  final NeumorphicThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        NeumorphicButton(
+          onPressed: () {
+            parent.toggleNightMode(context);
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: ClipOval(
+            child: Icon(
+              Icons.brightness_medium,
+              color: theme.defaultTextColor,
+              size: 25,
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        Neumorphic(
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(5),
+          child: SizedBox(
+            width: 100,
+            height: 100,
+            child: !isUpdating
+                ? ClipOval(
+                    child: tempURL != ''
+                        ? Image.network(
+                            tempURL,
+                            key: UniqueKey(),
+                            scale: 1,
+                            fit: BoxFit.fitWidth,
+                          )
+                        : Icon(
+                            Icons.person,
+                            color:
+                                theme.defaultTextColor,
+                            size: 100,
+                          ),
+                  )
+                : CircularProgressIndicator(),
+          ),
+        ),
+        SizedBox(
+          width: 20,
+        ),
+        // File picker
+        NeumorphicButton(
+          onPressed: () async {
+            File? profilePic = await Profile.pickFile();
+            if (profilePic != null) {
+              String _photoURL =
+                  await parent.uploadToFirebase(profilePic);
+              parent.setState(() {
+                tempURL = _photoURL;
+              });
+            }
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          padding: const EdgeInsets.all(10),
+          child: ClipOval(
+            child: Icon(
+              Icons.edit,
+              color: theme.defaultTextColor,
+              size: 25,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

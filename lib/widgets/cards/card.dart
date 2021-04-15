@@ -135,12 +135,17 @@ class _CardContentState extends State<CardContent> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(
-                    names,
-                    overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: theme.variantColor,
-                    ),
+                  FutureBuilder(
+                    future: convertToNames(),
+                    builder: (context, snapshot) {
+                      return Text(
+                        names,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          color: theme.variantColor,
+                        ),
+                      );
+                    }
                   ),
                   SizedBox(height: 30),
                 ],

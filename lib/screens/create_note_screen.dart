@@ -28,7 +28,7 @@ class CreateNoteScreen extends StatefulWidget {
 final Note emptyNote = Note(
     title: '',
     body: '',
-    author: FirebaseAuth.instance.currentUser!.displayName!,
+    authorID: FirebaseAuth.instance.currentUser!.displayName!,
     timestamp: DateTime.now(),
     group: emptyGroup,
     attachmentURL: tempURL,
