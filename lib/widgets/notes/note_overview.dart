@@ -4,7 +4,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 class NeumorphicNoteOverview extends StatefulWidget {
   final String title;
   final int numberOfNotes;
-  final List<String> notes;
+  final List<dynamic> notes;
 
   const NeumorphicNoteOverview({
     Key? key,

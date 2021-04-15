@@ -33,8 +33,7 @@ class GroupScreenState extends State<GroupScreen> {
 
   List<String> notes = [];
 
-  getRecentNotes() async {
-    setState(() async {
+  Future<List<String>> getRecentNotes() async {
       List<String> recentNotes = [];
       List<String> groupIDs = [];
 
@@ -65,13 +64,12 @@ class GroupScreenState extends State<GroupScreen> {
           }
         });
       });
-      print("data: $recentNotes");
       if (recentNotes.length <= 4) {
         notes = recentNotes;
       } else {
-        notes = recentNotes.take(4).toList();
+        recentNotes = recentNotes.take(4).toList();
       }
-    });
+    return recentNotes;
   }
 
   removeGroup(String groupID) {
@@ -109,6 +107,22 @@ class GroupScreenState extends State<GroupScreen> {
           child: ClipOval(
             child: Icon(
               Icons.person_rounded,
+              color: theme.defaultTextColor,
+            ),
+          ),
+        ),
+        NeumorphicButton(
+          onPressed: () => {
+            setState(() {})
+          },
+          style: NeumorphicStyle(
+            depth: 3,
+            intensity: 1,
+            boxShape: NeumorphicBoxShape.circle(),
+          ),
+          child: ClipOval(
+            child: Icon(
+              Icons.refresh,
               color: theme.defaultTextColor,
             ),
           ),
@@ -213,11 +227,16 @@ class GroupScreenState extends State<GroupScreen> {
                 flex: 4,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 30, 0, 30),
-                  child: NeumorphicNoteOverview(
-                    title: 'New Notes',
-                    notes: notes,
-                    numberOfNotes: 3,
-                  ),
+                  child: FutureBuilder(
+                      future: getRecentNotes(),
+                      initialData: ['Getting recent notes..'],
+                      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+                        return NeumorphicNoteOverview(
+                          title: 'New Notes',
+                          notes: snapshot.data??[],
+                          numberOfNotes: 3,
+                        );
+                      }),
                 ),
               ),
             ],

@@ -28,4 +28,19 @@ class CustomColors {
   static final Color silver = Color(0xFFB2B2B2);
   static final Color brown = Color(0xFFAF8C72);
   static final Color mint = Color(0xFFB9FFB7);
+
+  static List<Color> colors = [
+    CustomColors.red,
+    CustomColors.orange,
+    CustomColors.yellow,
+    CustomColors.lightBlue,
+    CustomColors.blue,
+    CustomColors.lavender,
+    CustomColors.pink,
+    CustomColors.darkGreen,
+    CustomColors.silver,
+    CustomColors.brown,
+    CustomColors.mint
+  ];
+
 }

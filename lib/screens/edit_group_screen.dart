@@ -1,12 +1,18 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:notes_app/res/custom_colors.dart';
+import 'package:notes_app/utils/color_picker.dart';
 import 'package:notes_app/utils/group.dart';
+import 'package:notes_app/utils/routes.dart';
 import 'package:notes_app/widgets/app_bars/app_bar_group.dart';
 import 'package:notes_app/widgets/app_bars/bottom_app_bar.dart';
 import 'package:notes_app/widgets/button.dart';
 import 'package:notes_app/widgets/text_field.dart';
+
+import 'notes_screen.dart';
 
 class EditGroupScreen extends StatefulWidget {
   const EditGroupScreen({
@@ -16,6 +22,7 @@ class EditGroupScreen extends StatefulWidget {
         super(key: key);
 
   final Group _group;
+  
 
   @override
   _EditGroupScreenState createState() => _EditGroupScreenState();
@@ -24,6 +31,26 @@ class EditGroupScreen extends StatefulWidget {
 class _EditGroupScreenState extends State<EditGroupScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
+  Color initalColor = Colors.red;
+  
+
+  Future<String> getMemberEmail(String id) async {
+    QuerySnapshot users = await FirebaseFirestore.instance
+        .collection('users')
+        .where('uid', isEqualTo: id)
+        .get();
+    DocumentSnapshot document = users.docs.first;
+    return document.get('display_name');
+  }
+
+  void changeColor(Color color) => setState(() => widget._group.color = color);
+
+  @override
+  void initState() { 
+    initalColor = widget._group.color;
+    _nameController.value = TextEditingValue(text: widget._group.name);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +73,10 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
       bottomNavigationBar: AppBarBottom(buttons: [
         NeumorphicButton(
           child: Icon(Icons.arrow_back, color: theme.disabledColor),
-          onPressed: () => {Navigator.of(context).pop()},
+          onPressed: ()  {
+            widget._group.color = initalColor;
+            Navigator.of(context).pop();
+            },
           style: NeumorphicStyle(boxShape: NeumorphicBoxShape.circle()),
         )
       ]),
@@ -85,7 +115,25 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                       depth: 5,
                                       intensity: 0,
                                     ),
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) {
+                                          return AlertDialog(
+                                            backgroundColor: Colors.transparent,
+                                            titlePadding:
+                                                const EdgeInsets.all(0.0),
+                                            contentPadding:
+                                                const EdgeInsets.all(8.0),
+                                            content: BlockPicker(
+                                              availableColors: CustomColors.colors,
+                                              pickerColor: widget._group.color,
+                                              onColorChanged: changeColor,
+                                            ),
+                                          );
+                                        },
+                                      );
+                                    },
                                     child: Icon(Icons.edit,
                                         color: widget._group.color)),
                               ),
@@ -107,7 +155,7 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 8.0),
                                       child: NeumorphicTextField(
-                                          labelText: 'Enter group title',
+                                          labelText: 'Edit group title',
                                           icon: Icon(
                                             Icons.description,
                                             color: theme.variantColor,
@@ -126,26 +174,36 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
                                       depth: -2,
                                       intensity: 1,
                                     ),
-                                    child: ListView(
-                                      children: [
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                        Member(),
-                                      ],
-                                    )),
+                                    child: Member(email: "test", admin: false,)),
                               ),
                               SizedBox(height: 8),
                               Button(
                                 text: 'Save group',
                                 color: widget._group.color,
                                 textColor: CustomColors.nightBG,
-                                onPressed: () async {},
+                                onPressed: () async {
+                                  if (_formKey.currentState!.validate()) {
+                                    widget._group.name = _nameController.value.text;
+                                    var db = FirebaseFirestore.instance;
+                                    var groupDoc =
+                                        db.collection('group').doc(widget._group.id);
+
+                                    final batch = db.batch();
+
+                                    batch.update(groupDoc, {
+                                      'color': widget._group.color.value,
+                                      'name': widget._group.name,
+                                    });
+
+                                    batch.commit().then(
+                                        (value) => print('Updated database'));
+
+                                  }
+                                  setState(() {
+                                    Navigator.of(context).pop();
+                                    //Routes.routeTo(NotesScreen(group: widget._group));
+                                  });
+                                },
                               ),
                             ],
                           ),
@@ -166,7 +224,12 @@ class _EditGroupScreenState extends State<EditGroupScreen> {
 class Member extends StatelessWidget {
   const Member({
     Key? key,
+    required this.email,
+    required this.admin,
   }) : super(key: key);
+
+  final String email;
+  final bool admin;
 
   @override
   Widget build(BuildContext context) {
@@ -177,7 +240,7 @@ class Member extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            'test@gmail.com',
+            email,
             style: TextStyle(color: theme.variantColor),
           ),
           NeumorphicButton(

@@ -38,20 +38,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _typeController = TextEditingController();
 
-  List<Color> colors = [
-    CustomColors.red,
-    CustomColors.orange,
-    CustomColors.yellow,
-    CustomColors.lightBlue,
-    CustomColors.blue,
-    CustomColors.lavender,
-    CustomColors.pink,
-    CustomColors.darkGreen,
-    CustomColors.silver,
-    CustomColors.brown,
-    CustomColors.mint
-  ];
-
   void changeColor(Color color) => setState(() => group.color = color);
 
   @override
@@ -127,7 +113,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                             contentPadding:
                                                 const EdgeInsets.all(8.0),
                                             content: BlockPicker(
-                                              availableColors: colors,
+                                              availableColors: CustomColors.colors,
                                               pickerColor: group.color,
                                               onColorChanged: changeColor,
                                             ),
