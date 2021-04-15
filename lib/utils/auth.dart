@@ -51,8 +51,29 @@ class Authentication {
     FirebaseFirestore db = FirebaseFirestore.instance;
     CollectionReference users = db.collection('users');
     var doc = await users.doc(user.uid).get();
-    if(!doc.exists){
-      users.doc(user.uid).set({'uid': user.uid, 'display_name': user.displayName});
+    if (!doc.exists) {
+      users
+          .doc(user.uid)
+          .set({'uid': user.uid, 'display_name': user.displayName});
+    }
+  }
+
+  static void forgotPassword(
+      {required BuildContext context, required String email}) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    try {
+      await auth.sendPasswordResetEmail(email: email);
+      ScaffoldMessenger.of(context).showSnackBar(
+        Authentication.customFeedbackSnackBar(
+          content: 'Reset password email sent',
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        Authentication.customErrorSnackBar(
+          content: 'There was an error sending an email',
+        ),
+      );
     }
   }
 
@@ -80,7 +101,6 @@ class Authentication {
 
         user = userCredential.user;
         updateDatabase(user!);
-
       } on FirebaseAuthException catch (e) {
         if (e.code == 'account-exists-with-different-credential') {
           ScaffoldMessenger.of(context).showSnackBar(
