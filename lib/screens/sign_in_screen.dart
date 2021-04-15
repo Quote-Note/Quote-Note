@@ -20,6 +20,7 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _forgotPasswordController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
@@ -113,6 +114,76 @@ class _SignInScreenState extends State<SignInScreen> {
                                   Routes.routeTo(SignUpScreen()))
                             },
                           ),
+                          TextButton(
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.transparent,
+                                      titlePadding: const EdgeInsets.all(0.0),
+                                      contentPadding: const EdgeInsets.all(8.0),
+                                      content: Neumorphic(
+                                        style: NeumorphicStyle(
+                                          color: theme.baseColor,
+                                          depth: 3,
+                                          intensity: 1,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(20.0),
+                                          child: SizedBox(
+                                              width: 300,
+                                              height: 250,
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceEvenly,
+                                                children: [
+                                                  Text('Enter your email',
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 24)),
+                                                  SizedBox(
+                                                    height: 30,
+                                                  ),
+                                                  NeumorphicTextField(
+                                                    keyboardType: TextInputType
+                                                        .emailAddress,
+                                                    maxLines: 1,
+                                                    labelText: 'Email',
+                                                    icon: Icon(Icons.email,
+                                                        color:
+                                                            theme.variantColor),
+                                                    controller:
+                                                        _forgotPasswordController,
+                                                  ),
+                                                  SizedBox(
+                                                    height: 20,
+                                                  ),
+                                                  Button(
+                                                    text: "Reset password",
+                                                    color: theme.baseColor,
+                                                    textColor:
+                                                        theme.defaultTextColor,
+                                                    onPressed: () {
+                                                      Authentication.forgotPassword(context: context, email: _forgotPasswordController.value.text);
+                                                      _forgotPasswordController.clear();
+                                                      Navigator.of(context).pop();
+                                                    },
+                                                  ),
+                                                ],
+                                              )),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                              child: Text('Forgot your password?',
+                                  style: TextStyle(
+                                    color: theme.disabledColor,
+                                  )))
                         ],
                       ),
                     ),
